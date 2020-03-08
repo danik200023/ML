@@ -5,6 +5,7 @@ from PyQt5 import QtWidgets
 import design
 import numpy as np
 import pandas as pd
+from sklearn import preprocessing
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
@@ -44,8 +45,10 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
             data = pd.read_csv(fname)
             Y = data[data.columns[-1]].astype('int')
             X = data.drop(data.columns[-1], axis=1)
-            global X_train, X_valid, Y_train, Y_valid
+            global X_train, X_valid, Y_train, Y_valid, X_train_normalized, X_valid_normalized
             X_train, X_valid, Y_train, Y_valid = train_test_split(X, Y, test_size=percent)
+            X_train_normalized = preprocessing.normalize(X_train)
+            X_valid_normalized = preprocessing.normalize(X_valid)
             global Ycsv
             Ycsv = Y_valid.to_frame()
             Ycsv.set_axis(['valid'], axis=1, inplace=True)
@@ -59,13 +62,13 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
         logistic = SGDClassifier()
         global cross_val_score_logistic, accuracy_score_logistic, precision_score_logistic, recall_score_logistic, f1_score_logistic
         cross_val_score_logistic = str(round(np.around(np.mean(cross_val_score(logistic,
-                                                                               X_train,
+                                                                               X_train_normalized,
                                                                                Y_train,
                                                                                cv=5)),
                                                        decimals=4) * 100, 5)) + "%"
         # self.listWidget.addItem("Доля верной классификации при кроссвалидации: " + cross_val_score_logistic)
-        logistic.fit(X_train, Y_train)
-        logistic_pred = logistic.predict(X_valid)
+        logistic.fit(X_train_normalized, Y_train)
+        logistic_pred = logistic.predict(X_valid_normalized)
         accuracy_score_logistic = str(round(np.around(accuracy_score(Y_valid, logistic_pred),
                                                       decimals=4) * 100, 5)) + "%"
         self.listWidget.addItem("Доля верной классификации: " + accuracy_score_logistic)
@@ -87,13 +90,13 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
         global cross_val_score_bayes, accuracy_score_bayes, precision_score_bayes, recall_score_bayes, f1_score_bayes
         clf = MultinomialNB()
         cross_val_score_bayes = str(round(np.around(np.mean(cross_val_score(clf,
-                                                                            X_train,
+                                                                            X_train_normalized,
                                                                             Y_train,
                                                                             cv=5)),
                                                     decimals=4), 5))
         # self.listWidget.addItem("Доля верной классификации при кроссвалидации: " + cross_val_score_bayes)
-        clf.fit(X_train, Y_train)
-        clf_pred = clf.predict(X_valid)
+        clf.fit(X_train_normalized, Y_train)
+        clf_pred = clf.predict(X_valid_normalized)
         accuracy_score_bayes = str(
             round(np.around(accuracy_score(Y_valid, clf_pred),
                             decimals=4) * 100, 5)) + "%"
@@ -116,13 +119,13 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
         global cross_val_score_discriminant, accuracy_score_discriminant, precision_score_discriminant, recall_score_discriminant, f1_score_discriminant
         disc = LinearDiscriminantAnalysis()
         cross_val_score_discriminant = str(round(np.around(np.mean(cross_val_score(disc,
-                                                                                   X_train,
+                                                                                   X_train_normalized,
                                                                                    Y_train,
                                                                                    cv=5)),
                                                            decimals=4) * 100, 5)) + "%"
         # self.listWidget.addItem("Доля верной классификации при кроссвалидации: " + cross_val_score_discriminant)
-        disc.fit(X_train, Y_train)
-        disc_pred = disc.predict(X_valid)
+        disc.fit(X_train_normalized, Y_train)
+        disc_pred = disc.predict(X_valid_normalized)
         accuracy_score_discriminant = str(round(
             np.around(accuracy_score(Y_valid, disc_pred),
                       decimals=4) * 100, 5)) + "%"
@@ -146,13 +149,13 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
         support = SVC()
         cross_val_score_svm = str(
             round(np.around(np.mean(cross_val_score(support,
-                                                    X_train,
+                                                    X_train_normalized,
                                                     Y_train,
                                                     cv=5)),
                             decimals=4) * 100, 5)) + "%"
         # self.listWidget.addItem("Доля верной классификации при кроссвалидации: " + cross_val_score_svm)
-        support.fit(X_train, Y_train)
-        support_pred = support.predict(X_valid)
+        support.fit(X_train_normalized, Y_train)
+        support_pred = support.predict(X_valid_normalized)
         accuracy_score_svm = str(
             round(np.around(accuracy_score(Y_valid, support_pred),
                             decimals=4) * 100, 5)) + "%"
@@ -175,14 +178,14 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
         global cross_val_score_tree, accuracy_score_tree, precision_score_tree, recall_score_tree, f1_score_tree
         tree = DecisionTreeClassifier()
         cross_val_score_tree = str(round(np.around(np.mean(cross_val_score(tree,
-                                                                           X_train,
+                                                                           X_train_normalized,
                                                                            Y_train,
                                                                            cv=5)),
                                                    decimals=4) * 100, 5)) + "%"
         # self.listWidget.addItem("Доля верной классификации при кроссвалидации: " + cross_val_score_tree)
 
-        tree.fit(X_train, Y_train)
-        tree_pred = tree.predict(X_valid)
+        tree.fit(X_train_normalized, Y_train)
+        tree_pred = tree.predict(X_valid_normalized)
         accuracy_score_tree = str(round(np.around(accuracy_score(Y_valid, tree_pred),
                                                   decimals=4) * 100, 5)) + "%"
         self.listWidget.addItem("Доля верно классификации: " + accuracy_score_tree)
@@ -204,13 +207,13 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
         global cross_val_score_network, accuracy_score_network, precision_score_network, recall_score_network, f1_score_network
         neural = MLPClassifier()
         cross_val_score_network = str(round(np.around(np.mean(cross_val_score(neural,
-                                                                              X_train,
+                                                                              X_train_normalized,
                                                                               Y_train,
                                                                               cv=5)),
                                                       decimals=4) * 100, 5)) + "%"
         # self.listWidget.addItem("Доля верной классификации при кроссвалидации: " + cross_val_score_network)
-        neural.fit(X_train, Y_train)
-        neural_pred = neural.predict(X_valid)
+        neural.fit(X_train_normalized, Y_train)
+        neural_pred = neural.predict(X_valid_normalized)
         accuracy_score_network = str(round(np.around(accuracy_score(Y_valid, neural_pred),
                                                      decimals=4) * 100, 5)) + "%"
         self.listWidget.addItem("Доля верно классификации: " + accuracy_score_network)
@@ -228,28 +231,28 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
 
     def radio_choise(self):
         if self.label_2.text() != "Вы не открыли файл" and self.label_2.text() != " ":
-            if self.lineEdit.text().isdigit() == True:
-                if int(self.lineEdit.text()) >= 1 and int(self.lineEdit.text()) <= 100:
+            if self.lineEdit.text().isdigit():
+                if 1 <= int(self.lineEdit.text()) <= 100:
                     self.listWidget.show()
                     self.label_5.show()
                     self.label_4.hide()
                     self.pushButton_2.show()
-                    if self.radioButton.isChecked() == True:
+                    if self.radioButton.isChecked():
                         self.bayes()
 
-                    if self.radioButton_2.isChecked() == True:
+                    if self.radioButton_2.isChecked():
                         self.logistic_regression()
 
-                    if self.radioButton_3.isChecked() == True:
+                    if self.radioButton_3.isChecked():
                         self.svm_vectors()
 
-                    if self.radioButton_4.isChecked() == True:
+                    if self.radioButton_4.isChecked():
                         self.discriminant_analysis()
 
-                    if self.radioButton_5.isChecked() == True:
+                    if self.radioButton_5.isChecked():
                         self.tree()
 
-                    if self.radioButton_6.isChecked() == True:
+                    if self.radioButton_6.isChecked():
                         self.neural_network()
                 else:
                     self.listWidget.hide()
@@ -270,7 +273,7 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
         wb = xlwt.Workbook()
         ws = wb.add_sheet('Output')  # , cell_overwrite_ok = True)
         # ws = wb.add_sheet("Output", cell_overwrite_ok=True)
-        #ws.write(1, 0, "Доля верной классификации при кроссвалидации")
+        # ws.write(1, 0, "Доля верной классификации при кроссвалидации")
         ws.write(1, 0, "Доля верной классификации")
         ws.write(2, 0, "Точность")
         ws.write(3, 0, "Полнота")
@@ -284,7 +287,7 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
         ws.write(0, 6, "Нейронная сеть")
 
         try:
-            #ws.write(1, 1, cross_val_score_logistic)
+            # ws.write(1, 1, cross_val_score_logistic)
             ws.write(1, 1, accuracy_score_logistic)
             ws.write(2, 1, precision_score_logistic)
             ws.write(3, 1, recall_score_logistic)
@@ -292,7 +295,7 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
         except:
             pass
         try:
-            #ws.write(1, 2, cross_val_score_bayes)
+            # ws.write(1, 2, cross_val_score_bayes)
             ws.write(1, 2, accuracy_score_bayes)
             ws.write(2, 2, precision_score_bayes)
             ws.write(3, 2, recall_score_bayes)
@@ -300,7 +303,7 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
         except:
             pass
         try:
-            #ws.write(1, 3, cross_val_score_discriminant)
+            # ws.write(1, 3, cross_val_score_discriminant)
             ws.write(1, 3, accuracy_score_discriminant)
             ws.write(2, 3, precision_score_discriminant)
             ws.write(3, 3, recall_score_discriminant)
@@ -308,7 +311,7 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
         except:
             pass
         try:
-            #ws.write(1, 4, cross_val_score_svm)
+            # ws.write(1, 4, cross_val_score_svm)
             ws.write(1, 4, accuracy_score_svm)
             ws.write(2, 4, precision_score_svm)
             ws.write(3, 4, recall_score_svm)
@@ -316,7 +319,7 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
         except:
             pass
         try:
-            #ws.write(1, 5, cross_val_score_tree)
+            # ws.write(1, 5, cross_val_score_tree)
             ws.write(1, 5, accuracy_score_tree)
             ws.write(2, 5, precision_score_tree)
             ws.write(3, 5, recall_score_tree)
@@ -324,7 +327,7 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
         except:
             pass
         try:
-            #ws.write(1, 6, cross_val_score_network)
+            # ws.write(1, 6, cross_val_score_network)
             ws.write(1, 6, accuracy_score_network)
             ws.write(2, 6, precision_score_network)
             ws.write(3, 6, recall_score_network)
@@ -343,6 +346,3 @@ def main():
 
 if __name__ == '__main__':  # Если мы запускаем файл напрямую, а не импортируем
     main()  # то запускаем функцию main()
-
-# string = "306"
-# string.isdigit()
