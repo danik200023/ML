@@ -53,192 +53,68 @@ logistic_predict_normalize_scale = logistic.predict(X_valid_normalize_scale)
 logistic.fit(X_train_scale_normalize, Y_train)
 logistic_predict_scale_normalize = logistic.predict(X_valid_scale_normalize)
 
+logistic_list = ["logistic_predict", "logistic_predict_normalize", "logistic_predict_scale",
+                 "logistic_predict_normalize_scale", "logistic_predict_scale_normalize"]
+
 logistic_accuracy = [round(np.around(accuracy_score(Y_valid, logistic_predict),
-                    decimals=4), 5), round(np.around(accuracy_score(Y_valid, logistic_predict_normalize),
-                    decimals=4), 5), round(np.around(accuracy_score(Y_valid, logistic_predict_scale),
-                    decimals=4), 5), round(np.around(accuracy_score(Y_valid, logistic_predict_normalize_scale),
-                    decimals=4), 5), round(np.around(accuracy_score(Y_valid, logistic_predict_scale_normalize),
-                    decimals=4), 5)]
-print(logistic_accuracy.index(max(logistic_accuracy)))
+                                     decimals=4), 5),
+                     round(np.around(accuracy_score(Y_valid, logistic_predict_normalize),
+                                     decimals=4), 5), round(np.around(accuracy_score(Y_valid, logistic_predict_scale),
+                                                                      decimals=4), 5),
+                     round(np.around(accuracy_score(Y_valid, logistic_predict_normalize_scale),
+                                     decimals=4), 5),
+                     round(np.around(accuracy_score(Y_valid, logistic_predict_scale_normalize),
+                                     decimals=4), 5)]
 
 logistic_precision = [round(np.around(precision_score(Y_valid, logistic_predict),
-                    decimals=4), 5), round(np.around(precision_score(Y_valid, logistic_predict_normalize),
-                    decimals=4), 5), round(np.around(precision_score(Y_valid, logistic_predict_scale),
-                    decimals=4), 5), round(np.around(precision_score(Y_valid, logistic_predict_normalize_scale),
-                    decimals=4), 5), round(np.around(precision_score(Y_valid, logistic_predict_scale_normalize),
-                    decimals=4), 5)]
-print(logistic_precision.index(max(logistic_precision)))
+                                      decimals=4), 5),
+                      round(np.around(precision_score(Y_valid, logistic_predict_normalize),
+                                      decimals=4), 5), round(np.around(precision_score(Y_valid, logistic_predict_scale),
+                                                                       decimals=4), 5),
+                      round(np.around(precision_score(Y_valid, logistic_predict_normalize_scale),
+                                      decimals=4), 5),
+                      round(np.around(precision_score(Y_valid, logistic_predict_scale_normalize),
+                                      decimals=4), 5)]
 
 logistic_recall = [round(np.around(recall_score(Y_valid, logistic_predict),
-                    decimals=4), 5), round(np.around(recall_score(Y_valid, logistic_predict_normalize),
-                    decimals=4), 5), round(np.around(recall_score(Y_valid, logistic_predict_scale),
-                    decimals=4), 5), round(np.around(recall_score(Y_valid, logistic_predict_normalize_scale),
-                    decimals=4), 5), round(np.around(recall_score(Y_valid, logistic_predict_scale_normalize),
-                    decimals=4), 5)]
-print(logistic_recall.index(max(logistic_recall)))
+                                   decimals=4), 5), round(np.around(recall_score(Y_valid, logistic_predict_normalize),
+                                                                    decimals=4), 5),
+                   round(np.around(recall_score(Y_valid, logistic_predict_scale),
+                                   decimals=4), 5),
+                   round(np.around(recall_score(Y_valid, logistic_predict_normalize_scale),
+                                   decimals=4), 5),
+                   round(np.around(recall_score(Y_valid, logistic_predict_scale_normalize),
+                                   decimals=4), 5)]
 
 logistic_f1 = [round(np.around(f1_score(Y_valid, logistic_predict),
-                    decimals=4), 5), round(np.around(f1_score(Y_valid, logistic_predict_normalize),
-                    decimals=4), 5), round(np.around(f1_score(Y_valid, logistic_predict_scale),
-                    decimals=4), 5), round(np.around(f1_score(Y_valid, logistic_predict_normalize_scale),
-                    decimals=4), 5), round(np.around(f1_score(Y_valid, logistic_predict_scale_normalize),
-                    decimals=4), 5)]
-print(logistic_f1.index(max(logistic_f1)))
+                               decimals=4), 5), round(np.around(f1_score(Y_valid, logistic_predict_normalize),
+                                                                decimals=4), 5),
+               round(np.around(f1_score(Y_valid, logistic_predict_scale),
+                               decimals=4), 5), round(np.around(f1_score(Y_valid, logistic_predict_normalize_scale),
+                                                                decimals=4), 5),
+               round(np.around(f1_score(Y_valid, logistic_predict_scale_normalize),
+                               decimals=4), 5)]
 
 logistic_roc_auc = [round(np.around(roc_auc_score(Y_valid, logistic_predict),
-                    decimals=4), 5), round(np.around(roc_auc_score(Y_valid, logistic_predict_normalize),
-                    decimals=4), 5), round(np.around(roc_auc_score(Y_valid, logistic_predict_scale),
-                    decimals=4), 5), round(np.around(roc_auc_score(Y_valid, logistic_predict_normalize_scale),
-                    decimals=4), 5), round(np.around(roc_auc_score(Y_valid, logistic_predict_scale_normalize),
-                    decimals=4), 5)]
+                                    decimals=4), 5), round(np.around(roc_auc_score(Y_valid, logistic_predict_normalize),
+                                                                     decimals=4), 5),
+                    round(np.around(roc_auc_score(Y_valid, logistic_predict_scale),
+                                    decimals=4), 5),
+                    round(np.around(roc_auc_score(Y_valid, logistic_predict_normalize_scale),
+                                    decimals=4), 5),
+                    round(np.around(roc_auc_score(Y_valid, logistic_predict_scale_normalize),
+                                    decimals=4), 5)]
 
 logistic_max_values_indexes = [logistic_accuracy.index(max(logistic_accuracy)),
-                      logistic_precision.index(max(logistic_precision)),
-                      logistic_recall.index(max(logistic_recall)),
-                      logistic_f1.index(max(logistic_f1)),
-                      logistic_roc_auc.index(max(logistic_roc_auc))]
+                               logistic_precision.index(max(logistic_precision)),
+                               logistic_recall.index(max(logistic_recall)),
+                               logistic_f1.index(max(logistic_f1)),
+                               logistic_roc_auc.index(max(logistic_roc_auc))]
 
-#print(mode(logistic_max_values_indexes))
-print(max(set(logistic_max_values_indexes), key = logistic_max_values_indexes.count))
-print("logistic_predict = " + str(
-    round(np.around(accuracy_score(Y_valid, logistic_predict),
-                    decimals=4) * 100, 5)) + "%")
+print(logistic_list[max(set(logistic_max_values_indexes), key=logistic_max_values_indexes.count)])
 
-print("logistic_predict_normalize = " + str(
-    round(np.around(accuracy_score(Y_valid, logistic_predict_normalize),
-                    decimals=4) * 100, 5)) + "%")
-
-print("logistic_predict_scale = " + str(
-    round(np.around(accuracy_score(Y_valid, logistic_predict_scale),
-                    decimals=4) * 100, 5)) + "%")
-
-print("logistic_predict_normalize_scale = " + str(
-    round(np.around(accuracy_score(Y_valid, logistic_predict_normalize_scale),
-                    decimals=4) * 100, 5)) + "%")
-
-print("logistic_predict_scale_normalize = " + str(
-    round(np.around(accuracy_score(Y_valid, logistic_predict_scale_normalize),
-                    decimals=4) * 100, 5)) + "%\n")
-
-print("logistic_prec = " + str(
-    round(np.around(precision_score(Y_valid, logistic_predict),
-                    decimals=4) * 100, 5)) + "%")
-
-print("logistic_prec_normalize = " + str(
-    round(np.around(precision_score(Y_valid, logistic_predict_normalize),
-                    decimals=4) * 100, 5)) + "%")
-
-print("logistic_prec_scale = " + str(
-    round(np.around(precision_score(Y_valid, logistic_predict_scale),
-                    decimals=4) * 100, 5)) + "%")
-
-print("logistic_prec_normalize_scale = " + str(
-    round(np.around(precision_score(Y_valid, logistic_predict_normalize_scale),
-                    decimals=4) * 100, 5)) + "%")
-
-print("logistic_prec_scale_normalize = " + str(
-    round(np.around(precision_score(Y_valid, logistic_predict_scale_normalize),
-                    decimals=4) * 100, 5)) + "%\n")
-
-print("logistic_recall = " + str(
-    round(np.around(recall_score(Y_valid, logistic_predict),
-                    decimals=4) * 100, 5)) + "%")
-
-print("logistic_recall_normalize = " + str(
-    round(np.around(recall_score(Y_valid, logistic_predict_normalize),
-                    decimals=4) * 100, 5)) + "%")
-
-print("logistic_recall_scale = " + str(
-    round(np.around(recall_score(Y_valid, logistic_predict_scale),
-                    decimals=4) * 100, 5)) + "%")
-
-print("logistic_recall_normalize_scale = " + str(
-    round(np.around(recall_score(Y_valid, logistic_predict_normalize_scale),
-                    decimals=4) * 100, 5)) + "%")
-
-print("logistic_recall_scale_normalize = " + str(
-    round(np.around(recall_score(Y_valid, logistic_predict_scale_normalize),
-                    decimals=4) * 100, 5)) + "%\n")
-
-print("logistic_f1 = " + str(
-    round(np.around(f1_score(Y_valid, logistic_predict),
-                    decimals=4) * 100, 5)) + "%")
-
-print("logistic_f1_normalize = " + str(
-    round(np.around(f1_score(Y_valid, logistic_predict_normalize),
-                    decimals=4) * 100, 5)) + "%")
-
-print("logistic_f1_scale = " + str(
-    round(np.around(f1_score(Y_valid, logistic_predict_scale),
-                    decimals=4) * 100, 5)) + "%")
-
-print("logistic_f1_normalize_scale = " + str(
-    round(np.around(f1_score(Y_valid, logistic_predict_normalize_scale),
-                    decimals=4) * 100, 5)) + "%")
-
-print("logistic_f1_scale_normalize = " + str(
-    round(np.around(f1_score(Y_valid, logistic_predict_scale_normalize),
-                    decimals=4) * 100, 5)) + "%\n")
-
-print("logistic_auc = " + str(
-    round(np.around(roc_auc_score(Y_valid, logistic_predict),
-                    decimals=4) * 100, 5)) + "%")
-
-print("logistic_auc_normalize = " + str(
-    round(np.around(roc_auc_score(Y_valid, logistic_predict_normalize),
-                    decimals=4) * 100, 5)) + "%")
-
-print("logistic_auc_scale = " + str(
-    round(np.around(roc_auc_score(Y_valid, logistic_predict_scale),
-                    decimals=4) * 100, 5)) + "%")
-
-print("logistic_auc_normalize_scale = " + str(
-    round(np.around(roc_auc_score(Y_valid, logistic_predict_normalize_scale),
-                    decimals=4) * 100, 5)) + "%")
-
-print("logistic_auc_scale_normalize = " + str(
-    round(np.around(roc_auc_score(Y_valid, logistic_predict_scale_normalize),
-                    decimals=4) * 100, 5)) + "%\n")
-
-"""clf.fit(X_train, Y_train)
-clf_predict = clf.predict(X_valid)
-
-disc.fit(X_train, Y_train)
-disc_predict = disc.predict(X_valid)
-
-neural.fit(X_train, Y_train)
-neural_predict = neural.predict(X_valid)
-
-support.fit(X_train, Y_train)
-support_predict = support.predict(X_valid)
-
-
-
-print(str(
-                round(np.around(accuracy_score(Y_valid, logistic_predict),
-                                decimals=4) * 100, 5)) + "%")
-
-print(str(
-                round(np.around(accuracy_score(Y_valid, clf_predict),
-                                decimals=4) * 100, 5)) + "%")
-
-print(str(
-                round(np.around(accuracy_score(Y_valid, disc_predict),
-                                decimals=4) * 100, 5)) + "%")
-
-print(str(
-                round(np.around(accuracy_score(Y_valid, neural_predict),
-                                decimals=4) * 100, 5)) + "%")
-
-print(str(
-                round(np.around(accuracy_score(Y_valid, support_predict),
-                                decimals=4) * 100, 5)) + "%")
-
-
-
-
-TN, FP, FN, TP = confusion_matrix(Y_valid, disc_predict).ravel()
-#print("TN = " + str(TN))
-#print("FN = " + str(FN))
-#print("TP = " + str(TP))
-#print("FP = " + str(FP))"""
+# TN, FP, FN, TP = confusion_matrix(Y_valid, disc_predict).ravel()
+# print("TN = " + str(TN))
+# print("FN = " + str(FN))
+# print("TP = " + str(TP))
+# print("FP = " + str(FP))"""
