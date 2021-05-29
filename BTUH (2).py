@@ -7,6 +7,7 @@ from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, confusion_matrix
 import numpy as np
+from statistics import mode
 from sklearn import preprocessing
 
 data = pd.read_csv('data/pima-indians-diabetes.csv')
@@ -52,6 +53,53 @@ logistic_predict_normalize_scale = logistic.predict(X_valid_normalize_scale)
 logistic.fit(X_train_scale_normalize, Y_train)
 logistic_predict_scale_normalize = logistic.predict(X_valid_scale_normalize)
 
+logistic_accuracy = [round(np.around(accuracy_score(Y_valid, logistic_predict),
+                    decimals=4), 5), round(np.around(accuracy_score(Y_valid, logistic_predict_normalize),
+                    decimals=4), 5), round(np.around(accuracy_score(Y_valid, logistic_predict_scale),
+                    decimals=4), 5), round(np.around(accuracy_score(Y_valid, logistic_predict_normalize_scale),
+                    decimals=4), 5), round(np.around(accuracy_score(Y_valid, logistic_predict_scale_normalize),
+                    decimals=4), 5)]
+print(logistic_accuracy.index(max(logistic_accuracy)))
+
+logistic_precision = [round(np.around(precision_score(Y_valid, logistic_predict),
+                    decimals=4), 5), round(np.around(precision_score(Y_valid, logistic_predict_normalize),
+                    decimals=4), 5), round(np.around(precision_score(Y_valid, logistic_predict_scale),
+                    decimals=4), 5), round(np.around(precision_score(Y_valid, logistic_predict_normalize_scale),
+                    decimals=4), 5), round(np.around(precision_score(Y_valid, logistic_predict_scale_normalize),
+                    decimals=4), 5)]
+print(logistic_precision.index(max(logistic_precision)))
+
+logistic_recall = [round(np.around(recall_score(Y_valid, logistic_predict),
+                    decimals=4), 5), round(np.around(recall_score(Y_valid, logistic_predict_normalize),
+                    decimals=4), 5), round(np.around(recall_score(Y_valid, logistic_predict_scale),
+                    decimals=4), 5), round(np.around(recall_score(Y_valid, logistic_predict_normalize_scale),
+                    decimals=4), 5), round(np.around(recall_score(Y_valid, logistic_predict_scale_normalize),
+                    decimals=4), 5)]
+print(logistic_recall.index(max(logistic_recall)))
+
+logistic_f1 = [round(np.around(f1_score(Y_valid, logistic_predict),
+                    decimals=4), 5), round(np.around(f1_score(Y_valid, logistic_predict_normalize),
+                    decimals=4), 5), round(np.around(f1_score(Y_valid, logistic_predict_scale),
+                    decimals=4), 5), round(np.around(f1_score(Y_valid, logistic_predict_normalize_scale),
+                    decimals=4), 5), round(np.around(f1_score(Y_valid, logistic_predict_scale_normalize),
+                    decimals=4), 5)]
+print(logistic_f1.index(max(logistic_f1)))
+
+logistic_roc_auc = [round(np.around(roc_auc_score(Y_valid, logistic_predict),
+                    decimals=4), 5), round(np.around(roc_auc_score(Y_valid, logistic_predict_normalize),
+                    decimals=4), 5), round(np.around(roc_auc_score(Y_valid, logistic_predict_scale),
+                    decimals=4), 5), round(np.around(roc_auc_score(Y_valid, logistic_predict_normalize_scale),
+                    decimals=4), 5), round(np.around(roc_auc_score(Y_valid, logistic_predict_scale_normalize),
+                    decimals=4), 5)]
+
+logistic_max_values_indexes = [logistic_accuracy.index(max(logistic_accuracy)),
+                      logistic_precision.index(max(logistic_precision)),
+                      logistic_recall.index(max(logistic_recall)),
+                      logistic_f1.index(max(logistic_f1)),
+                      logistic_roc_auc.index(max(logistic_roc_auc))]
+
+#print(mode(logistic_max_values_indexes))
+print(max(set(logistic_max_values_indexes), key = logistic_max_values_indexes.count))
 print("logistic_predict = " + str(
     round(np.around(accuracy_score(Y_valid, logistic_predict),
                     decimals=4) * 100, 5)) + "%")
