@@ -412,6 +412,14 @@ class Window(QtWidgets.QMainWindow, design.Ui_MainWindow):
             self.X_train, self.X_valid, self.Y_train, self.Y_valid = train_test_split(self.X, self.Y, test_size=self.percent)
             self.X_train_normalized = preprocessing.normalize(self.X_train)
             self.X_valid_normalized = preprocessing.normalize(self.X_valid)
+            self.X_train_normalize = preprocessing.normalize(self.X_train)
+            self.X_train_scale = preprocessing.scale(self.X_train)
+            self.X_train_normalize_scale = preprocessing.scale(self.X_train_normalize)
+            self.X_train_scale_normalize = preprocessing.normalize(self.X_train_scale)
+            self.X_valid_normalize = preprocessing.normalize(self.X_valid)
+            self.X_valid_scale = preprocessing.scale(self.X_valid)
+            self.X_valid_normalize_scale = preprocessing.scale(self.X_valid_normalize)
+            self.X_valid_scale_normalize = preprocessing.normalize(self.X_valid_scale)
             self.Ycsv = self.Y_valid.to_frame()
             self.Ycsv.set_axis(['valid'], axis=1, inplace=True)
             self.Ycsv.to_excel('prediction.xls')
@@ -501,7 +509,7 @@ class Window(QtWidgets.QMainWindow, design.Ui_MainWindow):
             preddd = []
             for j in range(count):
                 preddd.append(pred[j][i][1])
-                #print(pred[j][i][1])
+                # print(pred[j][i][1])
             predd.append(preddd)
             mean.append(np.mean(predd[i]))
             median.append(np.median(predd[i]))
@@ -552,7 +560,7 @@ class Window(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.auc_score_agregation_voting = str(round(roc_auc_score(self.Y_valid, votingg), 5))
         self.table()
 
-    def logistic_regression(self, x, y, x_val, y_val):
+    def logistic_regression(self, x, y, x_val, y_val, x_val_norm, ):
         if (self.new_data_flag == True) and (self.logistic_pred_flag == True):
             self.logistic_pred = self.logistic.predict(self.X)
         else:

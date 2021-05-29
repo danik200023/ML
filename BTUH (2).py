@@ -9,7 +9,6 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 import numpy as np
 from sklearn import preprocessing
 
-
 data = pd.read_csv('data/pima-indians-diabetes.csv')
 # data = pd.read_csv('data/water_purification.csv')
 X = data.drop(data.columns[-1], axis=1)
@@ -30,137 +29,128 @@ disc = LinearDiscriminantAnalysis()
 neural = MLPClassifier()
 support = SVC(kernel="linear", C=0.025)
 
-
-
-
-
-
 logistic.fit(X_train, Y_train)
 logistic_predict = logistic.predict(X_valid)
 
-del(logistic)
-logistic = SGDClassifier(loss='log')
+# del(logistic)
+# logistic = SGDClassifier(loss='log')
 logistic.fit(X_train_normalize, Y_train)
 logistic_predict_normalize = logistic.predict(X_valid_normalize)
 
-del(logistic)
-logistic = SGDClassifier(loss='log')
+# del(logistic)
+# logistic = SGDClassifier(loss='log')
 logistic.fit(X_train_scale, Y_train)
 logistic_predict_scale = logistic.predict(X_valid_scale)
 
-del(logistic)
-logistic = SGDClassifier(loss='log')
+# del(logistic)
+# logistic = SGDClassifier(loss='log')
 logistic.fit(X_train_normalize_scale, Y_train)
 logistic_predict_normalize_scale = logistic.predict(X_valid_normalize_scale)
 
-del(logistic)
-logistic = SGDClassifier(loss='log')
+# del(logistic)
+# logistic = SGDClassifier(loss='log')
 logistic.fit(X_train_scale_normalize, Y_train)
 logistic_predict_scale_normalize = logistic.predict(X_valid_scale_normalize)
 
 print("logistic_predict = " + str(
-                round(np.around(accuracy_score(Y_valid, logistic_predict),
-                                decimals=4) * 100, 5)) + "%")
+    round(np.around(accuracy_score(Y_valid, logistic_predict),
+                    decimals=4) * 100, 5)) + "%")
 
 print("logistic_predict_normalize = " + str(
-                round(np.around(accuracy_score(Y_valid, logistic_predict_normalize),
-                                decimals=4) * 100, 5)) + "%")
+    round(np.around(accuracy_score(Y_valid, logistic_predict_normalize),
+                    decimals=4) * 100, 5)) + "%")
 
 print("logistic_predict_scale = " + str(
-                round(np.around(accuracy_score(Y_valid, logistic_predict_scale),
-                                decimals=4) * 100, 5)) + "%")
+    round(np.around(accuracy_score(Y_valid, logistic_predict_scale),
+                    decimals=4) * 100, 5)) + "%")
 
 print("logistic_predict_normalize_scale = " + str(
-                round(np.around(accuracy_score(Y_valid, logistic_predict_normalize_scale),
-                                decimals=4) * 100, 5)) + "%")
+    round(np.around(accuracy_score(Y_valid, logistic_predict_normalize_scale),
+                    decimals=4) * 100, 5)) + "%")
 
 print("logistic_predict_scale_normalize = " + str(
-                round(np.around(accuracy_score(Y_valid, logistic_predict_scale_normalize),
-                                decimals=4) * 100, 5)) + "%\n")
-
+    round(np.around(accuracy_score(Y_valid, logistic_predict_scale_normalize),
+                    decimals=4) * 100, 5)) + "%\n")
 
 print("logistic_prec = " + str(
-                round(np.around(precision_score(Y_valid, logistic_predict),
-                                decimals=4) * 100, 5)) + "%")
+    round(np.around(precision_score(Y_valid, logistic_predict),
+                    decimals=4) * 100, 5)) + "%")
 
 print("logistic_prec_normalize = " + str(
-                round(np.around(precision_score(Y_valid, logistic_predict_normalize),
-                                decimals=4) * 100, 5)) + "%")
+    round(np.around(precision_score(Y_valid, logistic_predict_normalize),
+                    decimals=4) * 100, 5)) + "%")
 
 print("logistic_prec_scale = " + str(
-                round(np.around(precision_score(Y_valid, logistic_predict_scale),
-                                decimals=4) * 100, 5)) + "%")
+    round(np.around(precision_score(Y_valid, logistic_predict_scale),
+                    decimals=4) * 100, 5)) + "%")
 
 print("logistic_prec_normalize_scale = " + str(
-                round(np.around(precision_score(Y_valid, logistic_predict_normalize_scale),
-                                decimals=4) * 100, 5)) + "%")
+    round(np.around(precision_score(Y_valid, logistic_predict_normalize_scale),
+                    decimals=4) * 100, 5)) + "%")
 
 print("logistic_prec_scale_normalize = " + str(
-                round(np.around(precision_score(Y_valid, logistic_predict_scale_normalize),
-                                decimals=4) * 100, 5)) + "%\n")
+    round(np.around(precision_score(Y_valid, logistic_predict_scale_normalize),
+                    decimals=4) * 100, 5)) + "%\n")
 
 print("logistic_recall = " + str(
-                round(np.around(recall_score(Y_valid, logistic_predict),
-                                decimals=4) * 100, 5)) + "%")
+    round(np.around(recall_score(Y_valid, logistic_predict),
+                    decimals=4) * 100, 5)) + "%")
 
 print("logistic_recall_normalize = " + str(
-                round(np.around(recall_score(Y_valid, logistic_predict_normalize),
-                                decimals=4) * 100, 5)) + "%")
+    round(np.around(recall_score(Y_valid, logistic_predict_normalize),
+                    decimals=4) * 100, 5)) + "%")
 
 print("logistic_recall_scale = " + str(
-                round(np.around(recall_score(Y_valid, logistic_predict_scale),
-                                decimals=4) * 100, 5)) + "%")
+    round(np.around(recall_score(Y_valid, logistic_predict_scale),
+                    decimals=4) * 100, 5)) + "%")
 
 print("logistic_recall_normalize_scale = " + str(
-                round(np.around(recall_score(Y_valid, logistic_predict_normalize_scale),
-                                decimals=4) * 100, 5)) + "%")
+    round(np.around(recall_score(Y_valid, logistic_predict_normalize_scale),
+                    decimals=4) * 100, 5)) + "%")
 
 print("logistic_recall_scale_normalize = " + str(
-                round(np.around(recall_score(Y_valid, logistic_predict_scale_normalize),
-                                decimals=4) * 100, 5)) + "%\n")
+    round(np.around(recall_score(Y_valid, logistic_predict_scale_normalize),
+                    decimals=4) * 100, 5)) + "%\n")
 
 print("logistic_f1 = " + str(
-                round(np.around(f1_score(Y_valid, logistic_predict),
-                                decimals=4) * 100, 5)) + "%")
+    round(np.around(f1_score(Y_valid, logistic_predict),
+                    decimals=4) * 100, 5)) + "%")
 
 print("logistic_f1_normalize = " + str(
-                round(np.around(f1_score(Y_valid, logistic_predict_normalize),
-                                decimals=4) * 100, 5)) + "%")
+    round(np.around(f1_score(Y_valid, logistic_predict_normalize),
+                    decimals=4) * 100, 5)) + "%")
 
 print("logistic_f1_scale = " + str(
-                round(np.around(f1_score(Y_valid, logistic_predict_scale),
-                                decimals=4) * 100, 5)) + "%")
+    round(np.around(f1_score(Y_valid, logistic_predict_scale),
+                    decimals=4) * 100, 5)) + "%")
 
 print("logistic_f1_normalize_scale = " + str(
-                round(np.around(f1_score(Y_valid, logistic_predict_normalize_scale),
-                                decimals=4) * 100, 5)) + "%")
+    round(np.around(f1_score(Y_valid, logistic_predict_normalize_scale),
+                    decimals=4) * 100, 5)) + "%")
 
 print("logistic_f1_scale_normalize = " + str(
-                round(np.around(f1_score(Y_valid, logistic_predict_scale_normalize),
-                                decimals=4) * 100, 5)) + "%\n")
+    round(np.around(f1_score(Y_valid, logistic_predict_scale_normalize),
+                    decimals=4) * 100, 5)) + "%\n")
 
 print("logistic_auc = " + str(
-                round(np.around(roc_auc_score(Y_valid, logistic_predict),
-                                decimals=4) * 100, 5)) + "%")
+    round(np.around(roc_auc_score(Y_valid, logistic_predict),
+                    decimals=4) * 100, 5)) + "%")
 
 print("logistic_auc_normalize = " + str(
-                round(np.around(roc_auc_score(Y_valid, logistic_predict_normalize),
-                                decimals=4) * 100, 5)) + "%")
+    round(np.around(roc_auc_score(Y_valid, logistic_predict_normalize),
+                    decimals=4) * 100, 5)) + "%")
 
 print("logistic_auc_scale = " + str(
-                round(np.around(roc_auc_score(Y_valid, logistic_predict_scale),
-                                decimals=4) * 100, 5)) + "%")
+    round(np.around(roc_auc_score(Y_valid, logistic_predict_scale),
+                    decimals=4) * 100, 5)) + "%")
 
 print("logistic_auc_normalize_scale = " + str(
-                round(np.around(roc_auc_score(Y_valid, logistic_predict_normalize_scale),
-                                decimals=4) * 100, 5)) + "%")
+    round(np.around(roc_auc_score(Y_valid, logistic_predict_normalize_scale),
+                    decimals=4) * 100, 5)) + "%")
 
 print("logistic_auc_scale_normalize = " + str(
-                round(np.around(roc_auc_score(Y_valid, logistic_predict_scale_normalize),
-                                decimals=4) * 100, 5)) + "%\n")
-
-
-
+    round(np.around(roc_auc_score(Y_valid, logistic_predict_scale_normalize),
+                    decimals=4) * 100, 5)) + "%\n")
 
 """clf.fit(X_train, Y_train)
 clf_predict = clf.predict(X_valid)

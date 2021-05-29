@@ -9,6 +9,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+
 class Ui_SecondWindow(object):
     def setupUi(self, SecondWindow):
         SecondWindow.setObjectName("SecondWindow")
@@ -35,9 +36,9 @@ class Ui_SecondWindow(object):
         item.setBackground(QtGui.QColor(255, 255, 255))
         self.tableWidget.setVerticalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
-        #header = self.tableWidget.horizontalHeader()#По размеру колонок
-        #header.setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
-        #header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+        # header = self.tableWidget.horizontalHeader()#По размеру колонок
+        # header.setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
+        # header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
         self.tableWidget.setVerticalHeaderItem(1, item)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget.setVerticalHeaderItem(2, item)
@@ -179,6 +180,7 @@ class Ui_SecondWindow(object):
         self.lineEdit.setText(_translate("SecondWindow", "0.05"))
         self.pushButton.setText(_translate("SecondWindow", "Проверить значимость"))
 
+
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -209,8 +211,8 @@ class Ui_MainWindow(object):
         self.label.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.label.setAutoFillBackground(False)
         self.label.setStyleSheet("QLabel {\n"
-"    text-align:center;\n"
-"}")
+                                 "    text-align:center;\n"
+                                 "}")
         self.label.setObjectName("label")
         self.verticalLayout.addWidget(self.label)
         self.checkBox_8 = QtWidgets.QCheckBox(self.verticalLayoutWidget)
@@ -337,7 +339,6 @@ class Ui_MainWindow(object):
         self.pushButton_3.setText(_translate("MainWindow", "Добавить новые параметры"))
         self.pushButton_5.setText(_translate("MainWindow", "Прогнозирование"))
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
