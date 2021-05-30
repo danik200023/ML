@@ -152,7 +152,7 @@ class Window(QtWidgets.QMainWindow, design.Ui_MainWindow):
 
     def cleaning(self):
         try:
-            del self.accuracy_score_logistic
+            del self.logistic_accuracy
             del self.precision_score_logistic
             del self.recall_score_logistic
             del self.f1_score_logistic
