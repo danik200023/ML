@@ -10,6 +10,7 @@ import numpy as np
 from statistics import mode
 from sklearn import preprocessing
 
+
 data = pd.read_csv('data/pima-indians-diabetes.csv')
 # data = pd.read_csv('data/water_purification.csv')
 X = data.drop(data.columns[-1], axis=1)

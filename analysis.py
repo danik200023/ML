@@ -8,7 +8,24 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.ensemble import BaggingClassifier
+from sklearn.metrics import confusion_matrix
+import seaborn as sns
+import matplotlib.pyplot as plt
 
+def significant(window):
+    last_name = window.data[window.data.columns[len(window.data.columns) - 1]].name
+    window.count_of_false = len(window.data[window.data[last_name] == 0])
+    window.count_of_true = len(window.data[window.data[last_name] == 1])
+
+    if window.count_of_true > window.count_of_false:
+        window.prevalence_percentage = window.count_of_true / (window.count_of_true + window.count_of_false)
+    else:
+        window.prevalence_percentage = window.count_of_false / (window.count_of_true + window.count_of_false)
+    pass
+    if window.prevalence_percentage >= 0.7:
+        window.classes_disbalance = True
+    else:
+        window.classes_disbalance = False
 
 def logistic_regression(window, x_train, x_valid, y_train, y_valid, x_train_normalize, x_train_scale,
                         x_train_normalize_scale, x_train_scale_normalize, x_valid_normalize, x_valid_scale,
@@ -83,7 +100,51 @@ def logistic_regression(window, x_train, x_valid, y_train, y_valid, x_train_norm
                                    window.logistic_f1.index(max(window.logistic_f1)),
                                    window.logistic_roc_auc.index(max(window.logistic_roc_auc))]
 
-    #print(window.logistic_roc_auc[max(set(window.logistic_max_values_indexes), key=window.logistic_max_values_indexes.count)])
+
+    window.logistic_accuracy = window.logistic_accuracy[
+        max(set(window.logistic_max_values_indexes),
+            key=window.logistic_max_values_indexes.count)]
+
+    window.logistic_precision = window.logistic_precision[
+        max(set(window.logistic_max_values_indexes),
+            key=window.logistic_max_values_indexes.count)]
+
+    window.logistic_recall = window.logistic_recall[
+        max(set(window.logistic_max_values_indexes),
+            key=window.logistic_max_values_indexes.count)]
+
+    window.logistic_f1 = window.logistic_f1[
+        max(set(window.logistic_max_values_indexes),
+            key=window.logistic_max_values_indexes.count)]
+
+    window.logistic_roc_auc = window.logistic_roc_auc[
+        max(set(window.logistic_max_values_indexes),
+            key=window.logistic_max_values_indexes.count)]
+
+    logistic_predicts = [logistic_predict, logistic_predict_normalize, logistic_predict_scale, logistic_predict_normalize_scale,
+                       logistic_predict_scale_normalize]
+    predict = logistic_predicts[max(set(window.logistic_max_values_indexes),
+                                  key=window.logistic_max_values_indexes.count)]
+    cf_matrix = confusion_matrix(y_valid, predict)
+    TN, FP, FN, TP = cf_matrix.ravel()
+    group_names = ["TN", "FP", "FN", "TP"]
+    group_counts = ["{0: 0.0f}".format(value) for value in cf_matrix.flatten()]
+    labels = [f"{v1}\n{v2}" for v1, v2 in zip(group_names, group_counts)]
+    labels = np.asarray(labels).reshape(2, 2)
+    sns.heatmap(cf_matrix, annot=labels, fmt="", cmap="Blues", cbar=True, xticklabels=False,
+                yticklabels=False)
+    #plt.show()
+    if window.logistic_roc_auc >= 0.7:
+        window.logistic_roc_auc_significant = False
+        window.logistic_f1_significant = True
+        window.logistic_significant = window.logistic_f1
+    if window.logistic_roc_auc < 0.7:
+        window.logistic_roc_auc_significant = True
+        window.logistic_f1_significant = False
+        window.logistic_significant = window.logistic_roc_auc
+
+
+
 
 
 def bayes(window, x_train, x_valid, y_train, y_valid, x_train_normalize, x_train_scale,
@@ -153,6 +214,7 @@ def bayes(window, x_train, x_valid, y_train, y_valid, x_train_normalize, x_train
                                        decimals=4), 5),
                        round(np.around(roc_auc_score(y_valid, clf_predict_scale_normalize),
                                        decimals=4), 5)]
+
     except ValueError:
         clf.fit(x_train, y_train)
         clf_predict = clf.predict(x_valid)
@@ -187,6 +249,74 @@ def bayes(window, x_train, x_valid, y_train, y_valid, x_train_normalize, x_train
                                   window.clf_recall.index(max(window.clf_recall)),
                                   window.clf_f1.index(max(window.clf_f1)),
                                   window.clf_roc_auc.index(max(window.clf_roc_auc))]
+
+        window.clf_accuracy = window.clf_accuracy[
+            max(set(window.clf_max_values_indexes),
+                key=window.clf_max_values_indexes.count)]
+
+        window.clf_precision = window.clf_precision[
+            max(set(window.clf_max_values_indexes),
+                key=window.clf_max_values_indexes.count)]
+
+        window.clf_recall = window.clf_recall[
+            max(set(window.clf_max_values_indexes),
+                key=window.clf_max_values_indexes.count)]
+
+        window.clf_f1 = window.clf_f1[
+            max(set(window.clf_max_values_indexes),
+                key=window.clf_max_values_indexes.count)]
+
+        window.clf_roc_auc = window.clf_roc_auc[
+            max(set(window.clf_max_values_indexes),
+                key=window.clf_max_values_indexes.count)]
+        try:
+            clf_predicts = [clf_predict, clf_predict_normalize, clf_predict_scale,
+                                 clf_predict_normalize_scale,
+                                 clf_predict_scale_normalize]
+            predict = clf_predicts[max(set(window.clf_max_values_indexes),
+                                            key=window.clf_max_values_indexes.count)]
+            cf_matrix = confusion_matrix(y_valid, predict)
+            TN, FP, FN, TP = cf_matrix.ravel()
+            group_names = ["TN", "FP", "FN", "TP"]
+            group_counts = ["{0: 0.0f}".format(value) for value in cf_matrix.flatten()]
+            labels = [f"{v1}\n{v2}" for v1, v2 in zip(group_names, group_counts)]
+            labels = np.asarray(labels).reshape(2, 2)
+            sns.heatmap(cf_matrix, annot=labels, fmt="", cmap="Blues", cbar=True, xticklabels=False,
+                        yticklabels=False)
+            #plt.show()
+            len_cf_matrix = TN + FP + FN + TP
+            if window.clf_roc_auc >= 0.7:
+                window.clf_roc_auc_significant = False
+                window.clf_f1_significant = True
+                window.clf_significant = window.clf_f1
+            if window.clf_roc_auc < 0.7:
+                window.clf_roc_auc_significant = True
+                window.clf_f1_significant = False
+                window.clf_significant = window.clf_roc_auc
+            pass
+        except:
+            clf_predicts = [clf_predict, clf_predict_normalize]
+            predict = clf_predicts[max(set(window.clf_max_values_indexes),
+                                       key=window.clf_max_values_indexes.count)]
+            cf_matrix = confusion_matrix(y_valid, predict)
+            TN, FP, FN, TP = cf_matrix.ravel()
+            group_names = ["TN", "FP", "FN", "TP"]
+            group_counts = ["{0: 0.0f}".format(value) for value in cf_matrix.flatten()]
+            labels = [f"{v1}\n{v2}" for v1, v2 in zip(group_names, group_counts)]
+            labels = np.asarray(labels).reshape(2, 2)
+            sns.heatmap(cf_matrix, annot=labels, fmt="", cmap="Blues", cbar=True, xticklabels=False,
+                        yticklabels=False)
+            #plt.show()
+            len_cf_matrix = TN + FP + FN + TP
+            if window.clf_roc_auc >= 0.7:
+                window.clf_roc_auc_significant = False
+                window.clf_f1_significant = True
+                window.clf_significant = window.clf_f1
+            if window.clf_roc_auc < 0.7:
+                window.clf_roc_auc_significant = True
+                window.clf_f1_significant = False
+                window.clf_significant = window.clf_roc_auc
+
 
 def discriminant_analysis(window, x_train, x_valid, y_train, y_valid, x_train_normalize, x_train_scale,
                           x_train_normalize_scale, x_train_scale_normalize, x_valid_normalize, x_valid_scale,
@@ -261,7 +391,50 @@ def discriminant_analysis(window, x_train, x_valid, y_train, y_valid, x_train_no
                                window.disc_f1.index(max(window.disc_f1)),
                                window.disc_roc_auc.index(max(window.disc_roc_auc))]
 
-    #print(window.disc_roc_auc[max(set(disc_max_values_indexes), key=disc_max_values_indexes.count)])
+    window.disc_accuracy = window.disc_accuracy[
+        max(set(window.disc_max_values_indexes),
+            key=window.disc_max_values_indexes.count)]
+
+    window.disc_precision = window.disc_precision[
+        max(set(window.disc_max_values_indexes),
+            key=window.disc_max_values_indexes.count)]
+
+    window.disc_recall = window.disc_recall[
+        max(set(window.disc_max_values_indexes),
+            key=window.disc_max_values_indexes.count)]
+
+    window.disc_f1 = window.disc_f1[
+        max(set(window.disc_max_values_indexes),
+            key=window.disc_max_values_indexes.count)]
+
+    window.disc_roc_auc = window.disc_roc_auc[
+        max(set(window.disc_max_values_indexes),
+            key=window.disc_max_values_indexes.count)]
+
+    disc_predicts = [disc_predict, disc_predict_normalize, disc_predict_scale,
+                    disc_predict_normalize_scale,
+                    disc_predict_scale_normalize]
+    predict = disc_predicts[max(set(window.disc_max_values_indexes),
+                               key=window.disc_max_values_indexes.count)]
+    cf_matrix = confusion_matrix(y_valid, predict)
+    TN, FP, FN, TP = cf_matrix.ravel()
+    group_names = ["TN", "FP", "FN", "TP"]
+    group_counts = ["{0: 0.0f}".format(value) for value in cf_matrix.flatten()]
+    labels = [f"{v1}\n{v2}" for v1, v2 in zip(group_names, group_counts)]
+    labels = np.asarray(labels).reshape(2, 2)
+    sns.heatmap(cf_matrix, annot=labels, fmt="", cmap="Blues", cbar=True, xticklabels=False,
+                yticklabels=False)
+    #plt.show()
+
+    len_cf_matrix = TN + FP + FN + TP
+    if window.disc_roc_auc >= 0.7:
+        window.disc_roc_auc_significant = False
+        window.disc_f1_significant = True
+        window.disc_significant = window.disc_f1
+    if window.disc_roc_auc < 0.7:
+        window.disc_roc_auc_significant = True
+        window.disc_f1_significant = False
+        window.disc_significant = window.disc_roc_auc
 
 
 def svm_vectors(window, x_train, x_valid, y_train, y_valid, x_train_normalize, x_train_scale,
@@ -337,8 +510,49 @@ def svm_vectors(window, x_train, x_valid, y_train, y_valid, x_train_normalize, x
                                   window.support_f1.index(max(window.support_f1)),
                                   window.support_roc_auc.index(max(window.support_roc_auc))]
 
-    #print(window.support_roc_auc[max(set(support_max_values_indexes), key=support_max_values_indexes.count)])
+    window.support_accuracy = window.support_accuracy[
+        max(set(window.support_max_values_indexes),
+            key=window.support_max_values_indexes.count)]
 
+    window.support_precision = window.support_precision[
+        max(set(window.support_max_values_indexes),
+            key=window.support_max_values_indexes.count)]
+
+    window.support_recall = window.support_recall[
+        max(set(window.support_max_values_indexes),
+            key=window.support_max_values_indexes.count)]
+
+    window.support_f1 = window.support_f1[
+        max(set(window.support_max_values_indexes),
+            key=window.support_max_values_indexes.count)]
+
+    window.support_roc_auc = window.support_roc_auc[
+        max(set(window.support_max_values_indexes),
+            key=window.support_max_values_indexes.count)]
+
+    support_predicts = [support_predict, support_predict_normalize, support_predict_scale,
+                    support_predict_normalize_scale,
+                    support_predict_scale_normalize]
+    predict = support_predicts[max(set(window.support_max_values_indexes),
+                               key=window.support_max_values_indexes.count)]
+    cf_matrix = confusion_matrix(y_valid, predict)
+    TN, FP, FN, TP = cf_matrix.ravel()
+    group_names = ["TN", "FP", "FN", "TP"]
+    group_counts = ["{0: 0.0f}".format(value) for value in cf_matrix.flatten()]
+    labels = [f"{v1}\n{v2}" for v1, v2 in zip(group_names, group_counts)]
+    labels = np.asarray(labels).reshape(2, 2)
+    sns.heatmap(cf_matrix, annot=labels, fmt="", cmap="Blues", cbar=True, xticklabels=False,
+                yticklabels=False)
+    #plt.show()
+    len_cf_matrix = TN + FP + FN + TP
+    if window.support_roc_auc >= 0.7:
+        window.support_roc_auc_significant = False
+        window.support_f1_significant = True
+        window.support_significant = window.support_f1
+    if window.support_roc_auc < 0.7:
+        window.support_roc_auc_significant = True
+        window.support_f1_significant = False
+        window.support_significant = window.support_roc_auc
 
 def tree(window, x_train, x_valid, y_train, y_valid, x_train_normalize, x_train_scale,
          x_train_normalize_scale, x_train_scale_normalize, x_valid_normalize, x_valid_scale,
@@ -413,8 +627,49 @@ def tree(window, x_train, x_valid, y_train, y_valid, x_train_normalize, x_train_
                                window.tree_f1.index(max(window.tree_f1)),
                                window.tree_roc_auc.index(max(window.tree_roc_auc))]
 
-    #print(window.tree_roc_auc[max(set(tree_max_values_indexes), key=tree_max_values_indexes.count)])
+    window.tree_accuracy = window.tree_accuracy[
+        max(set(window.tree_max_values_indexes),
+            key=window.tree_max_values_indexes.count)]
 
+    window.tree_precision = window.tree_precision[
+        max(set(window.tree_max_values_indexes),
+            key=window.tree_max_values_indexes.count)]
+
+    window.tree_recall = window.tree_recall[
+        max(set(window.tree_max_values_indexes),
+            key=window.tree_max_values_indexes.count)]
+
+    window.tree_f1 = window.tree_f1[
+        max(set(window.tree_max_values_indexes),
+            key=window.tree_max_values_indexes.count)]
+
+    window.tree_roc_auc = window.tree_roc_auc[
+        max(set(window.tree_max_values_indexes),
+            key=window.tree_max_values_indexes.count)]
+
+    tree_predicts = [tree_predict, tree_predict_normalize, tree_predict_scale,
+                    tree_predict_normalize_scale,
+                    tree_predict_scale_normalize]
+    predict = tree_predicts[max(set(window.tree_max_values_indexes),
+                               key=window.tree_max_values_indexes.count)]
+    cf_matrix = confusion_matrix(y_valid, predict)
+    TN, FP, FN, TP = cf_matrix.ravel()
+    group_names = ["TN", "FP", "FN", "TP"]
+    group_counts = ["{0: 0.0f}".format(value) for value in cf_matrix.flatten()]
+    labels = [f"{v1}\n{v2}" for v1, v2 in zip(group_names, group_counts)]
+    labels = np.asarray(labels).reshape(2, 2)
+    sns.heatmap(cf_matrix, annot=labels, fmt="", cmap="Blues", cbar=True, xticklabels=False,
+                yticklabels=False)
+    #plt.show()
+    len_cf_matrix = TN + FP + FN + TP
+    if window.tree_roc_auc >= 0.7:
+        window.tree_roc_auc_significant = False
+        window.tree_f1_significant = True
+        window.tree_significant = window.tree_f1
+    if window.tree_roc_auc < 0.7:
+        window.tree_roc_auc_significant = True
+        window.tree_f1_significant = False
+        window.tree_significant = window.tree_roc_auc
 
 def neural_network(window, x_train, x_valid, y_train, y_valid, x_train_normalize, x_train_scale,
                    x_train_normalize_scale, x_train_scale_normalize, x_valid_normalize, x_valid_scale,
@@ -489,4 +744,50 @@ def neural_network(window, x_train, x_valid, y_train, y_valid, x_train_normalize
                                  window.neural_f1.index(max(window.neural_f1)),
                                  window.neural_roc_auc.index(max(window.neural_roc_auc))]
 
-    #print(window.neural_roc_auc[max(set(neural_max_values_indexes), key=neural_max_values_indexes.count)])
+
+
+    neural_predicts = [neural_predict, neural_predict_normalize, neural_predict_scale, neural_predict_normalize_scale, neural_predict_scale_normalize]
+    predict = neural_predicts[max(set(window.neural_max_values_indexes),
+            key=window.neural_max_values_indexes.count)]
+    cf_matrix = confusion_matrix(y_valid, predict)
+    TN, FP, FN, TP = cf_matrix.ravel()
+    group_names = ["TN", "FP", "FN", "TP"]
+    group_counts = ["{0: 0.0f}".format(value) for value in cf_matrix.flatten()]
+    labels = [f"{v1}\n{v2}" for v1, v2 in zip(group_names, group_counts)]
+    labels = np.asarray(labels).reshape(2, 2)
+    sns.heatmap(cf_matrix, annot=labels, fmt="", cmap="Blues", cbar=True, xticklabels=False,
+                yticklabels=False)
+    #plt.show()
+    len_cf_matrix = TN + FP + FN + TP
+
+
+
+
+    window.neural_accuracy = window.neural_accuracy[
+        max(set(window.neural_max_values_indexes),
+            key=window.neural_max_values_indexes.count)]
+
+    window.neural_precision = window.neural_precision[
+        max(set(window.neural_max_values_indexes),
+            key=window.neural_max_values_indexes.count)]
+
+    window.neural_recall = window.neural_recall[
+        max(set(window.neural_max_values_indexes),
+            key=window.neural_max_values_indexes.count)]
+
+    window.neural_f1 = window.neural_f1[
+        max(set(window.neural_max_values_indexes),
+            key=window.neural_max_values_indexes.count)]
+
+    window.neural_roc_auc = window.neural_roc_auc[
+        max(set(window.neural_max_values_indexes),
+            key=window.neural_max_values_indexes.count)]
+
+    if window.neural_roc_auc >= 0.7:
+        window.neural_roc_auc_significant = False
+        window.neural_f1_significant = True
+        window.neural_significant = window.neural_f1
+    if window.neural_roc_auc < 0.7:
+        window.neural_roc_auc_significant = True
+        window.neural_f1_significant = False
+        window.neural_significant = window.neural_roc_auc

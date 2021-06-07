@@ -2,6 +2,7 @@ import sys
 import os
 import xlwt
 from PyQt5 import QtWidgets
+from PyQt5 import QtGui
 from PyQt5.QtWidgets import QTableWidgetItem
 import design
 import numpy as np
@@ -290,6 +291,7 @@ class Window(QtWidgets.QMainWindow, design.Ui_MainWindow):
             self.tableWidget.setItem(row, column + 1, QTableWidgetItem(self.precision_score_network))
             self.tableWidget.setItem(row, column + 2, QTableWidgetItem(self.recall_score_network))
             self.tableWidget.setItem(row, column + 3, QTableWidgetItem(self.f1_score_network))
+            self.tableWidget.item(row, column).setForeground(QtGui.QColor(0, 160, 0))
             self.tableWidget.setItem(row, column + 4, QTableWidgetItem(self.auc_score_network))
             # row += 1
         except:

@@ -184,7 +184,7 @@ class Ui_SecondWindow(object):
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(502, 689)
+        MainWindow.resize(620, 689)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayoutWidget = QtWidgets.QWidget(self.centralwidget)
@@ -300,7 +300,7 @@ class Ui_MainWindow(object):
         self.pushButton_5.setGeometry(QtCore.QRect(20, 370, 171, 23))
         self.pushButton_5.setObjectName("pushButton_5")
         self.tableWidget = QtWidgets.QTableWidget(self.centralwidget)
-        self.tableWidget.setGeometry(QtCore.QRect(10, 400, 481, 231))
+        self.tableWidget.setGeometry(QtCore.QRect(10, 400, 600, 210))
         self.tableWidget.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.tableWidget.setWordWrap(True)
         self.tableWidget.setObjectName("tableWidget")

@@ -12,7 +12,8 @@ def main():
     window = Window()  # Создаём объект класса Window
     window.show()  # Показываем окно
     window.pushButton.clicked.connect(lambda: browse.browse_folder(window))
-    window.pushButton_4.clicked.connect(lambda: table.cleaning(window))
+    #window.pushButton_4.clicked.connect(lambda: table.cleaning(window))
+    window.pushButton_4.clicked.connect(lambda: analysis.significant(window))
     window.pushButton_4.clicked.connect(
         lambda: analysis.logistic_regression(window, window.x_train, window.x_valid, window.y_train, window.y_valid,
                                              window.x_train_normalize, window.x_train_scale,
