@@ -13,7 +13,10 @@ def table(window):
             "Агрегирование по голосованию"])
     column = 0  # столбец
     row = 0  # строка
-
+    font = QtGui.QFont()
+    font.setBold(False)
+    for i in range(9):
+        window.tableWidget.verticalHeaderItem(i).setFont(font)
     try:
         significant_metrics = []
         try:

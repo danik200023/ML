@@ -14,6 +14,7 @@ class Ui_SecondWindow(object):
     def setupUi(self, SecondWindow):
         SecondWindow.setObjectName("SecondWindow")
         SecondWindow.resize(378, 460)
+        #QtWidgets.QWidget.move(100, 100)
         self.centralwidget = QtWidgets.QWidget(SecondWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.tableWidget = QtWidgets.QTableWidget(self.centralwidget)
@@ -128,12 +129,13 @@ class Ui_SecondWindow(object):
         self.lineEdit.setObjectName("lineEdit")
         SecondWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(SecondWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 621, 21))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 621, 66))
         self.menubar.setObjectName("menubar")
         SecondWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(SecondWindow)
         self.statusbar.setObjectName("statusbar")
         SecondWindow.setStatusBar(self.statusbar)
+        #self.move(500, 500)
 
         self.retranslateUi(SecondWindow)
         QtCore.QMetaObject.connectSlotsByName(SecondWindow)
