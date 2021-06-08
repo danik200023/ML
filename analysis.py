@@ -1,7 +1,7 @@
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split, GridSearchCV
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
+from sklearn.metrics import accuracy_score, precision_score, recall_score, fbeta_score, roc_auc_score, fbeta_score
 from sklearn.svm import SVC
 from sklearn.linear_model import SGDClassifier
 from sklearn.neural_network import MLPClassifier
@@ -11,6 +11,7 @@ from sklearn.ensemble import BaggingClassifier
 from sklearn.metrics import confusion_matrix
 import seaborn as sns
 import matplotlib.pyplot as plt
+
 
 def significant(window):
     last_name = window.data[window.data.columns[len(window.data.columns) - 1]].name
@@ -27,6 +28,7 @@ def significant(window):
     else:
         window.classes_disbalance = False
 
+
 def logistic_regression(window, x_train, x_valid, y_train, y_valid, x_train_normalize, x_train_scale,
                         x_train_normalize_scale, x_train_scale_normalize, x_valid_normalize, x_valid_scale,
                         x_valid_normalize_scale, x_valid_scale_normalize):
@@ -42,64 +44,65 @@ def logistic_regression(window, x_train, x_valid, y_train, y_valid, x_train_norm
     logistic.fit(x_train_scale_normalize, y_train)
     logistic_predict_scale_normalize = logistic.predict(x_valid_scale_normalize)
     window.logistic_accuracy = [round(np.around(accuracy_score(y_valid, logistic_predict),
-                                         decimals=4), 5),
-                         round(np.around(accuracy_score(y_valid, logistic_predict_normalize),
-                                         decimals=4), 5),
-                         round(np.around(accuracy_score(y_valid, logistic_predict_scale),
-                                         decimals=4), 5),
-                         round(np.around(accuracy_score(y_valid, logistic_predict_normalize_scale),
-                                         decimals=4), 5),
-                         round(np.around(accuracy_score(y_valid, logistic_predict_scale_normalize),
-                                         decimals=4), 5)]
+                                                decimals=4), 5),
+                                round(np.around(accuracy_score(y_valid, logistic_predict_normalize),
+                                                decimals=4), 5),
+                                round(np.around(accuracy_score(y_valid, logistic_predict_scale),
+                                                decimals=4), 5),
+                                round(np.around(accuracy_score(y_valid, logistic_predict_normalize_scale),
+                                                decimals=4), 5),
+                                round(np.around(accuracy_score(y_valid, logistic_predict_scale_normalize),
+                                                decimals=4), 5)]
 
     window.logistic_precision = [round(np.around(precision_score(y_valid, logistic_predict),
-                                          decimals=4), 5),
-                          round(np.around(precision_score(y_valid, logistic_predict_normalize),
-                                          decimals=4), 5),
-                          round(np.around(precision_score(y_valid, logistic_predict_scale),
-                                          decimals=4), 5),
-                          round(np.around(precision_score(y_valid, logistic_predict_normalize_scale),
-                                          decimals=4), 5),
-                          round(np.around(precision_score(y_valid, logistic_predict_scale_normalize),
-                                          decimals=4), 5)]
+                                                 decimals=4), 5),
+                                 round(np.around(precision_score(y_valid, logistic_predict_normalize),
+                                                 decimals=4), 5),
+                                 round(np.around(precision_score(y_valid, logistic_predict_scale),
+                                                 decimals=4), 5),
+                                 round(np.around(precision_score(y_valid, logistic_predict_normalize_scale),
+                                                 decimals=4), 5),
+                                 round(np.around(precision_score(y_valid, logistic_predict_scale_normalize),
+                                                 decimals=4), 5)]
 
     window.logistic_recall = [round(np.around(recall_score(y_valid, logistic_predict),
-                                       decimals=4), 5),
-                       round(np.around(recall_score(y_valid, logistic_predict_normalize),
-                                       decimals=4), 5),
-                       round(np.around(recall_score(y_valid, logistic_predict_scale),
-                                       decimals=4), 5),
-                       round(np.around(recall_score(y_valid, logistic_predict_normalize_scale),
-                                       decimals=4), 5),
-                       round(np.around(recall_score(y_valid, logistic_predict_scale_normalize),
-                                       decimals=4), 5)]
+                                              decimals=4), 5),
+                              round(np.around(recall_score(y_valid, logistic_predict_normalize),
+                                              decimals=4), 5),
+                              round(np.around(recall_score(y_valid, logistic_predict_scale),
+                                              decimals=4), 5),
+                              round(np.around(recall_score(y_valid, logistic_predict_normalize_scale),
+                                              decimals=4), 5),
+                              round(np.around(recall_score(y_valid, logistic_predict_scale_normalize),
+                                              decimals=4), 5)]
 
-    window.logistic_f1 = [round(np.around(f1_score(y_valid, logistic_predict),
-                                   decimals=4), 5), round(np.around(f1_score(y_valid, logistic_predict_normalize),
-                                                                    decimals=4), 5),
-                   round(np.around(f1_score(y_valid, logistic_predict_scale),
-                                   decimals=4), 5), round(np.around(f1_score(y_valid, logistic_predict_normalize_scale),
-                                                                    decimals=4), 5),
-                   round(np.around(f1_score(y_valid, logistic_predict_scale_normalize),
-                                   decimals=4), 5)]
+    window.logistic_f1 = [round(np.around(fbeta_score(y_valid, logistic_predict, 0.5),
+                                          decimals=4), 5),
+                          round(np.around(fbeta_score(y_valid, logistic_predict_normalize, 0.5),
+                                          decimals=4), 5),
+                          round(np.around(fbeta_score(y_valid, logistic_predict_scale, 0.5),
+                                          decimals=4), 5),
+                          round(np.around(fbeta_score(y_valid, logistic_predict_normalize_scale, 0.5),
+                                          decimals=4), 5),
+                          round(np.around(fbeta_score(y_valid, logistic_predict_scale_normalize, 0.5),
+                                          decimals=4), 5)]
 
     window.logistic_roc_auc = [round(np.around(roc_auc_score(y_valid, logistic_predict),
-                                        decimals=4), 5),
-                        round(np.around(roc_auc_score(y_valid, logistic_predict_normalize),
-                                        decimals=4), 5),
-                        round(np.around(roc_auc_score(y_valid, logistic_predict_scale),
-                                        decimals=4), 5),
-                        round(np.around(roc_auc_score(y_valid, logistic_predict_normalize_scale),
-                                        decimals=4), 5),
-                        round(np.around(roc_auc_score(y_valid, logistic_predict_scale_normalize),
-                                        decimals=4), 5)]
+                                               decimals=4), 5),
+                               round(np.around(roc_auc_score(y_valid, logistic_predict_normalize),
+                                               decimals=4), 5),
+                               round(np.around(roc_auc_score(y_valid, logistic_predict_scale),
+                                               decimals=4), 5),
+                               round(np.around(roc_auc_score(y_valid, logistic_predict_normalize_scale),
+                                               decimals=4), 5),
+                               round(np.around(roc_auc_score(y_valid, logistic_predict_scale_normalize),
+                                               decimals=4), 5)]
 
     window.logistic_max_values_indexes = [window.logistic_accuracy.index(max(window.logistic_accuracy)),
-                                   window.logistic_precision.index(max(window.logistic_precision)),
-                                   window.logistic_recall.index(max(window.logistic_recall)),
-                                   window.logistic_f1.index(max(window.logistic_f1)),
-                                   window.logistic_roc_auc.index(max(window.logistic_roc_auc))]
-
+                                          window.logistic_precision.index(max(window.logistic_precision)),
+                                          window.logistic_recall.index(max(window.logistic_recall)),
+                                          window.logistic_f1.index(max(window.logistic_f1)),
+                                          window.logistic_roc_auc.index(max(window.logistic_roc_auc))]
 
     window.logistic_accuracy = window.logistic_accuracy[
         max(set(window.logistic_max_values_indexes),
@@ -121,10 +124,11 @@ def logistic_regression(window, x_train, x_valid, y_train, y_valid, x_train_norm
         max(set(window.logistic_max_values_indexes),
             key=window.logistic_max_values_indexes.count)]
 
-    logistic_predicts = [logistic_predict, logistic_predict_normalize, logistic_predict_scale, logistic_predict_normalize_scale,
-                       logistic_predict_scale_normalize]
+    logistic_predicts = [logistic_predict, logistic_predict_normalize, logistic_predict_scale,
+                         logistic_predict_normalize_scale,
+                         logistic_predict_scale_normalize]
     predict = logistic_predicts[max(set(window.logistic_max_values_indexes),
-                                  key=window.logistic_max_values_indexes.count)]
+                                    key=window.logistic_max_values_indexes.count)]
     cf_matrix = confusion_matrix(y_valid, predict)
     TN, FP, FN, TP = cf_matrix.ravel()
     group_names = ["TN", "FP", "FN", "TP"]
@@ -133,7 +137,7 @@ def logistic_regression(window, x_train, x_valid, y_train, y_valid, x_train_norm
     labels = np.asarray(labels).reshape(2, 2)
     sns.heatmap(cf_matrix, annot=labels, fmt="", cmap="Blues", cbar=True, xticklabels=False,
                 yticklabels=False)
-    #plt.show()
+    # plt.show()
     if window.logistic_roc_auc >= 0.7:
         window.logistic_roc_auc_significant = False
         window.logistic_f1_significant = True
@@ -142,9 +146,6 @@ def logistic_regression(window, x_train, x_valid, y_train, y_valid, x_train_norm
         window.logistic_roc_auc_significant = True
         window.logistic_f1_significant = False
         window.logistic_significant = window.logistic_roc_auc
-
-
-
 
 
 def bayes(window, x_train, x_valid, y_train, y_valid, x_train_normalize, x_train_scale,
@@ -163,57 +164,58 @@ def bayes(window, x_train, x_valid, y_train, y_valid, x_train_normalize, x_train
         clf.fit(x_train_scale_normalize, y_train)
         clf_predict_scale_normalize = clf.predict(x_valid_scale_normalize)
         window.clf_accuracy = [round(np.around(accuracy_score(y_valid, clf_predict),
-                                        decimals=4), 5),
-                        round(np.around(accuracy_score(y_valid, clf_predict_normalize),
-                                        decimals=4), 5),
-                        round(np.around(accuracy_score(y_valid, clf_predict_scale),
-                                        decimals=4), 5),
-                        round(np.around(accuracy_score(y_valid, clf_predict_normalize_scale),
-                                        decimals=4), 5),
-                        round(np.around(accuracy_score(y_valid, clf_predict_scale_normalize),
-                                        decimals=4), 5)]
+                                               decimals=4), 5),
+                               round(np.around(accuracy_score(y_valid, clf_predict_normalize),
+                                               decimals=4), 5),
+                               round(np.around(accuracy_score(y_valid, clf_predict_scale),
+                                               decimals=4), 5),
+                               round(np.around(accuracy_score(y_valid, clf_predict_normalize_scale),
+                                               decimals=4), 5),
+                               round(np.around(accuracy_score(y_valid, clf_predict_scale_normalize),
+                                               decimals=4), 5)]
 
         window.clf_precision = [round(np.around(precision_score(y_valid, clf_predict),
-                                         decimals=4), 5),
-                         round(np.around(precision_score(y_valid, clf_predict_normalize),
-                                         decimals=4), 5),
-                         round(np.around(precision_score(y_valid, clf_predict_scale),
-                                         decimals=4), 5),
-                         round(np.around(precision_score(y_valid, clf_predict_normalize_scale),
-                                         decimals=4), 5),
-                         round(np.around(precision_score(y_valid, clf_predict_scale_normalize),
-                                         decimals=4), 5)]
+                                                decimals=4), 5),
+                                round(np.around(precision_score(y_valid, clf_predict_normalize),
+                                                decimals=4), 5),
+                                round(np.around(precision_score(y_valid, clf_predict_scale),
+                                                decimals=4), 5),
+                                round(np.around(precision_score(y_valid, clf_predict_normalize_scale),
+                                                decimals=4), 5),
+                                round(np.around(precision_score(y_valid, clf_predict_scale_normalize),
+                                                decimals=4), 5)]
 
         window.clf_recall = [round(np.around(recall_score(y_valid, clf_predict),
-                                      decimals=4), 5),
-                      round(np.around(recall_score(y_valid, clf_predict_normalize),
-                                      decimals=4), 5),
-                      round(np.around(recall_score(y_valid, clf_predict_scale),
-                                      decimals=4), 5),
-                      round(np.around(recall_score(y_valid, clf_predict_normalize_scale),
-                                      decimals=4), 5),
-                      round(np.around(recall_score(y_valid, clf_predict_scale_normalize),
-                                      decimals=4), 5)]
+                                             decimals=4), 5),
+                             round(np.around(recall_score(y_valid, clf_predict_normalize),
+                                             decimals=4), 5),
+                             round(np.around(recall_score(y_valid, clf_predict_scale),
+                                             decimals=4), 5),
+                             round(np.around(recall_score(y_valid, clf_predict_normalize_scale),
+                                             decimals=4), 5),
+                             round(np.around(recall_score(y_valid, clf_predict_scale_normalize),
+                                             decimals=4), 5)]
 
-        window.clf_f1 = [round(np.around(f1_score(y_valid, clf_predict),
-                                  decimals=4), 5), round(np.around(f1_score(y_valid, clf_predict_normalize),
-                                                                   decimals=4), 5),
-                  round(np.around(f1_score(y_valid, clf_predict_scale),
-                                  decimals=4), 5), round(np.around(f1_score(y_valid, clf_predict_normalize_scale),
-                                                                   decimals=4), 5),
-                  round(np.around(f1_score(y_valid, clf_predict_scale_normalize),
-                                  decimals=4), 5)]
+        window.clf_f1 = [round(np.around(fbeta_score(y_valid, clf_predict, 0.5),
+                                         decimals=4), 5), round(np.around(fbeta_score(y_valid, clf_predict_normalize),
+                                                                          decimals=4), 5),
+                         round(np.around(fbeta_score(y_valid, clf_predict_scale, 0.5),
+                                         decimals=4), 5),
+                         round(np.around(fbeta_score(y_valid, clf_predict_normalize_scale, 0.5),
+                                         decimals=4), 5),
+                         round(np.around(fbeta_score(y_valid, clf_predict_scale_normalize, 0.5),
+                                         decimals=4), 5)]
 
         window.clf_roc_auc = [round(np.around(roc_auc_score(y_valid, clf_predict),
-                                       decimals=4), 5),
-                       round(np.around(roc_auc_score(y_valid, clf_predict_normalize),
-                                       decimals=4), 5),
-                       round(np.around(roc_auc_score(y_valid, clf_predict_scale),
-                                       decimals=4), 5),
-                       round(np.around(roc_auc_score(y_valid, clf_predict_normalize_scale),
-                                       decimals=4), 5),
-                       round(np.around(roc_auc_score(y_valid, clf_predict_scale_normalize),
-                                       decimals=4), 5)]
+                                              decimals=4), 5),
+                              round(np.around(roc_auc_score(y_valid, clf_predict_normalize),
+                                              decimals=4), 5),
+                              round(np.around(roc_auc_score(y_valid, clf_predict_scale),
+                                              decimals=4), 5),
+                              round(np.around(roc_auc_score(y_valid, clf_predict_normalize_scale),
+                                              decimals=4), 5),
+                              round(np.around(roc_auc_score(y_valid, clf_predict_scale_normalize),
+                                              decimals=4), 5)]
 
     except ValueError:
         clf.fit(x_train, y_train)
@@ -221,34 +223,34 @@ def bayes(window, x_train, x_valid, y_train, y_valid, x_train_normalize, x_train
         clf.fit(x_train_normalize, y_train)
         clf_predict_normalize = clf.predict(x_valid_normalize)
         window.clf_accuracy = [round(np.around(accuracy_score(y_valid, clf_predict),
-                                        decimals=4), 5),
-                        round(np.around(accuracy_score(y_valid, clf_predict_normalize),
-                                        decimals=4), 5)]
+                                               decimals=4), 5),
+                               round(np.around(accuracy_score(y_valid, clf_predict_normalize),
+                                               decimals=4), 5)]
 
         window.clf_precision = [round(np.around(precision_score(y_valid, clf_predict, zero_division=0),
-                                         decimals=4), 5),
-                         round(np.around(precision_score(y_valid, clf_predict_normalize, zero_division=0),
-                                         decimals=4), 5)]
+                                                decimals=4), 5),
+                                round(np.around(precision_score(y_valid, clf_predict_normalize, zero_division=0),
+                                                decimals=4), 5)]
 
         window.clf_recall = [round(np.around(recall_score(y_valid, clf_predict),
-                                      decimals=4), 5),
-                      round(np.around(recall_score(y_valid, clf_predict_normalize),
-                                      decimals=4), 5)]
+                                             decimals=4), 5),
+                             round(np.around(recall_score(y_valid, clf_predict_normalize),
+                                             decimals=4), 5)]
 
-        window.clf_f1 = [round(np.around(f1_score(y_valid, clf_predict),
-                                  decimals=4), 5), round(np.around(f1_score(y_valid, clf_predict_normalize),
-                                                                   decimals=4), 5)]
+        window.clf_f1 = [round(np.around(fbeta_score(y_valid, clf_predict, 1),
+                                         decimals=4), 5), round(np.around(fbeta_score(y_valid, clf_predict_normalize, 1),
+                                                                          decimals=4), 5)]
 
         window.clf_roc_auc = [round(np.around(roc_auc_score(y_valid, clf_predict),
-                                       decimals=4), 5),
-                       round(np.around(roc_auc_score(y_valid, clf_predict_normalize),
-                                       decimals=4), 5)]
+                                              decimals=4), 5),
+                              round(np.around(roc_auc_score(y_valid, clf_predict_normalize),
+                                              decimals=4), 5)]
     finally:
         window.clf_max_values_indexes = [window.clf_accuracy.index(max(window.clf_accuracy)),
-                                  window.clf_precision.index(max(window.clf_precision)),
-                                  window.clf_recall.index(max(window.clf_recall)),
-                                  window.clf_f1.index(max(window.clf_f1)),
-                                  window.clf_roc_auc.index(max(window.clf_roc_auc))]
+                                         window.clf_precision.index(max(window.clf_precision)),
+                                         window.clf_recall.index(max(window.clf_recall)),
+                                         window.clf_f1.index(max(window.clf_f1)),
+                                         window.clf_roc_auc.index(max(window.clf_roc_auc))]
 
         window.clf_accuracy = window.clf_accuracy[
             max(set(window.clf_max_values_indexes),
@@ -271,10 +273,10 @@ def bayes(window, x_train, x_valid, y_train, y_valid, x_train_normalize, x_train
                 key=window.clf_max_values_indexes.count)]
         try:
             clf_predicts = [clf_predict, clf_predict_normalize, clf_predict_scale,
-                                 clf_predict_normalize_scale,
-                                 clf_predict_scale_normalize]
+                            clf_predict_normalize_scale,
+                            clf_predict_scale_normalize]
             predict = clf_predicts[max(set(window.clf_max_values_indexes),
-                                            key=window.clf_max_values_indexes.count)]
+                                       key=window.clf_max_values_indexes.count)]
             cf_matrix = confusion_matrix(y_valid, predict)
             TN, FP, FN, TP = cf_matrix.ravel()
             group_names = ["TN", "FP", "FN", "TP"]
@@ -283,7 +285,7 @@ def bayes(window, x_train, x_valid, y_train, y_valid, x_train_normalize, x_train
             labels = np.asarray(labels).reshape(2, 2)
             sns.heatmap(cf_matrix, annot=labels, fmt="", cmap="Blues", cbar=True, xticklabels=False,
                         yticklabels=False)
-            #plt.show()
+            # plt.show()
             len_cf_matrix = TN + FP + FN + TP
             if window.clf_roc_auc >= 0.7:
                 window.clf_roc_auc_significant = False
@@ -306,7 +308,7 @@ def bayes(window, x_train, x_valid, y_train, y_valid, x_train_normalize, x_train
             labels = np.asarray(labels).reshape(2, 2)
             sns.heatmap(cf_matrix, annot=labels, fmt="", cmap="Blues", cbar=True, xticklabels=False,
                         yticklabels=False)
-            #plt.show()
+            # plt.show()
             len_cf_matrix = TN + FP + FN + TP
             if window.clf_roc_auc >= 0.7:
                 window.clf_roc_auc_significant = False
@@ -333,63 +335,63 @@ def discriminant_analysis(window, x_train, x_valid, y_train, y_valid, x_train_no
     disc.fit(x_train_scale_normalize, y_train)
     disc_predict_scale_normalize = disc.predict(x_valid_scale_normalize)
     window.disc_accuracy = [round(np.around(accuracy_score(y_valid, disc_predict),
-                                     decimals=4), 5),
-                     round(np.around(accuracy_score(y_valid, disc_predict_normalize),
-                                     decimals=4), 5),
-                     round(np.around(accuracy_score(y_valid, disc_predict_scale),
-                                     decimals=4), 5),
-                     round(np.around(accuracy_score(y_valid, disc_predict_normalize_scale),
-                                     decimals=4), 5),
-                     round(np.around(accuracy_score(y_valid, disc_predict_scale_normalize),
-                                     decimals=4), 5)]
+                                            decimals=4), 5),
+                            round(np.around(accuracy_score(y_valid, disc_predict_normalize),
+                                            decimals=4), 5),
+                            round(np.around(accuracy_score(y_valid, disc_predict_scale),
+                                            decimals=4), 5),
+                            round(np.around(accuracy_score(y_valid, disc_predict_normalize_scale),
+                                            decimals=4), 5),
+                            round(np.around(accuracy_score(y_valid, disc_predict_scale_normalize),
+                                            decimals=4), 5)]
 
     window.disc_precision = [round(np.around(precision_score(y_valid, disc_predict),
-                                      decimals=4), 5),
-                      round(np.around(precision_score(y_valid, disc_predict_normalize),
-                                      decimals=4), 5),
-                      round(np.around(precision_score(y_valid, disc_predict_scale),
-                                      decimals=4), 5),
-                      round(np.around(precision_score(y_valid, disc_predict_normalize_scale),
-                                      decimals=4), 5),
-                      round(np.around(precision_score(y_valid, disc_predict_scale_normalize),
-                                      decimals=4), 5)]
+                                             decimals=4), 5),
+                             round(np.around(precision_score(y_valid, disc_predict_normalize),
+                                             decimals=4), 5),
+                             round(np.around(precision_score(y_valid, disc_predict_scale),
+                                             decimals=4), 5),
+                             round(np.around(precision_score(y_valid, disc_predict_normalize_scale),
+                                             decimals=4), 5),
+                             round(np.around(precision_score(y_valid, disc_predict_scale_normalize),
+                                             decimals=4), 5)]
 
     window.disc_recall = [round(np.around(recall_score(y_valid, disc_predict),
-                                   decimals=4), 5),
-                   round(np.around(recall_score(y_valid, disc_predict_normalize),
-                                   decimals=4), 5),
-                   round(np.around(recall_score(y_valid, disc_predict_scale),
-                                   decimals=4), 5),
-                   round(np.around(recall_score(y_valid, disc_predict_normalize_scale),
-                                   decimals=4), 5),
-                   round(np.around(recall_score(y_valid, disc_predict_scale_normalize),
-                                   decimals=4), 5)]
+                                          decimals=4), 5),
+                          round(np.around(recall_score(y_valid, disc_predict_normalize),
+                                          decimals=4), 5),
+                          round(np.around(recall_score(y_valid, disc_predict_scale),
+                                          decimals=4), 5),
+                          round(np.around(recall_score(y_valid, disc_predict_normalize_scale),
+                                          decimals=4), 5),
+                          round(np.around(recall_score(y_valid, disc_predict_scale_normalize),
+                                          decimals=4), 5)]
 
-    window.disc_f1 = [round(np.around(f1_score(y_valid, disc_predict),
-                               decimals=4), 5), round(np.around(f1_score(y_valid, disc_predict_normalize),
-                                                                decimals=4), 5),
-               round(np.around(f1_score(y_valid, disc_predict_scale),
-                               decimals=4), 5), round(np.around(f1_score(y_valid, disc_predict_normalize_scale),
-                                                                decimals=4), 5),
-               round(np.around(f1_score(y_valid, disc_predict_scale_normalize),
-                               decimals=4), 5)]
+    window.disc_f1 = [round(np.around(fbeta_score(y_valid, disc_predict, 0.5),
+                                      decimals=4), 5), round(np.around(fbeta_score(y_valid, disc_predict_normalize, 0.5),
+                                                                       decimals=4), 5),
+                      round(np.around(fbeta_score(y_valid, disc_predict_scale, 0.5),
+                                      decimals=4), 5), round(np.around(fbeta_score(y_valid, disc_predict_normalize_scale, 0.5),
+                                                                       decimals=4), 5),
+                      round(np.around(fbeta_score(y_valid, disc_predict_scale_normalize, 0.5),
+                                      decimals=4), 5)]
 
     window.disc_roc_auc = [round(np.around(roc_auc_score(y_valid, disc_predict),
-                                    decimals=4), 5),
-                    round(np.around(roc_auc_score(y_valid, disc_predict_normalize),
-                                    decimals=4), 5),
-                    round(np.around(roc_auc_score(y_valid, disc_predict_scale),
-                                    decimals=4), 5),
-                    round(np.around(roc_auc_score(y_valid, disc_predict_normalize_scale),
-                                    decimals=4), 5),
-                    round(np.around(roc_auc_score(y_valid, disc_predict_scale_normalize),
-                                    decimals=4), 5)]
+                                           decimals=4), 5),
+                           round(np.around(roc_auc_score(y_valid, disc_predict_normalize),
+                                           decimals=4), 5),
+                           round(np.around(roc_auc_score(y_valid, disc_predict_scale),
+                                           decimals=4), 5),
+                           round(np.around(roc_auc_score(y_valid, disc_predict_normalize_scale),
+                                           decimals=4), 5),
+                           round(np.around(roc_auc_score(y_valid, disc_predict_scale_normalize),
+                                           decimals=4), 5)]
 
     window.disc_max_values_indexes = [window.disc_accuracy.index(max(window.disc_accuracy)),
-                               window.disc_precision.index(max(window.disc_precision)),
-                               window.disc_recall.index(max(window.disc_recall)),
-                               window.disc_f1.index(max(window.disc_f1)),
-                               window.disc_roc_auc.index(max(window.disc_roc_auc))]
+                                      window.disc_precision.index(max(window.disc_precision)),
+                                      window.disc_recall.index(max(window.disc_recall)),
+                                      window.disc_f1.index(max(window.disc_f1)),
+                                      window.disc_roc_auc.index(max(window.disc_roc_auc))]
 
     window.disc_accuracy = window.disc_accuracy[
         max(set(window.disc_max_values_indexes),
@@ -412,10 +414,10 @@ def discriminant_analysis(window, x_train, x_valid, y_train, y_valid, x_train_no
             key=window.disc_max_values_indexes.count)]
 
     disc_predicts = [disc_predict, disc_predict_normalize, disc_predict_scale,
-                    disc_predict_normalize_scale,
-                    disc_predict_scale_normalize]
+                     disc_predict_normalize_scale,
+                     disc_predict_scale_normalize]
     predict = disc_predicts[max(set(window.disc_max_values_indexes),
-                               key=window.disc_max_values_indexes.count)]
+                                key=window.disc_max_values_indexes.count)]
     cf_matrix = confusion_matrix(y_valid, predict)
     TN, FP, FN, TP = cf_matrix.ravel()
     group_names = ["TN", "FP", "FN", "TP"]
@@ -424,7 +426,7 @@ def discriminant_analysis(window, x_train, x_valid, y_train, y_valid, x_train_no
     labels = np.asarray(labels).reshape(2, 2)
     sns.heatmap(cf_matrix, annot=labels, fmt="", cmap="Blues", cbar=True, xticklabels=False,
                 yticklabels=False)
-    #plt.show()
+    # plt.show()
 
     len_cf_matrix = TN + FP + FN + TP
     if window.disc_roc_auc >= 0.7:
@@ -452,63 +454,64 @@ def svm_vectors(window, x_train, x_valid, y_train, y_valid, x_train_normalize, x
     support.fit(x_train_scale_normalize, y_train)
     support_predict_scale_normalize = support.predict(x_valid_scale_normalize)
     window.support_accuracy = [round(np.around(accuracy_score(y_valid, support_predict),
-                                        decimals=4), 5),
-                        round(np.around(accuracy_score(y_valid, support_predict_normalize),
-                                        decimals=4), 5),
-                        round(np.around(accuracy_score(y_valid, support_predict_scale),
-                                        decimals=4), 5),
-                        round(np.around(accuracy_score(y_valid, support_predict_normalize_scale),
-                                        decimals=4), 5),
-                        round(np.around(accuracy_score(y_valid, support_predict_scale_normalize),
-                                        decimals=4), 5)]
+                                               decimals=4), 5),
+                               round(np.around(accuracy_score(y_valid, support_predict_normalize),
+                                               decimals=4), 5),
+                               round(np.around(accuracy_score(y_valid, support_predict_scale),
+                                               decimals=4), 5),
+                               round(np.around(accuracy_score(y_valid, support_predict_normalize_scale),
+                                               decimals=4), 5),
+                               round(np.around(accuracy_score(y_valid, support_predict_scale_normalize),
+                                               decimals=4), 5)]
 
     window.support_precision = [round(np.around(precision_score(y_valid, support_predict),
-                                         decimals=4), 5),
-                         round(np.around(precision_score(y_valid, support_predict_normalize),
-                                         decimals=4), 5),
-                         round(np.around(precision_score(y_valid, support_predict_scale),
-                                         decimals=4), 5),
-                         round(np.around(precision_score(y_valid, support_predict_normalize_scale),
-                                         decimals=4), 5),
-                         round(np.around(precision_score(y_valid, support_predict_scale_normalize),
-                                         decimals=4), 5)]
+                                                decimals=4), 5),
+                                round(np.around(precision_score(y_valid, support_predict_normalize),
+                                                decimals=4), 5),
+                                round(np.around(precision_score(y_valid, support_predict_scale),
+                                                decimals=4), 5),
+                                round(np.around(precision_score(y_valid, support_predict_normalize_scale),
+                                                decimals=4), 5),
+                                round(np.around(precision_score(y_valid, support_predict_scale_normalize),
+                                                decimals=4), 5)]
 
     window.support_recall = [round(np.around(recall_score(y_valid, support_predict),
-                                      decimals=4), 5),
-                      round(np.around(recall_score(y_valid, support_predict_normalize),
-                                      decimals=4), 5),
-                      round(np.around(recall_score(y_valid, support_predict_scale),
-                                      decimals=4), 5),
-                      round(np.around(recall_score(y_valid, support_predict_normalize_scale),
-                                      decimals=4), 5),
-                      round(np.around(recall_score(y_valid, support_predict_scale_normalize),
-                                      decimals=4), 5)]
+                                             decimals=4), 5),
+                             round(np.around(recall_score(y_valid, support_predict_normalize),
+                                             decimals=4), 5),
+                             round(np.around(recall_score(y_valid, support_predict_scale),
+                                             decimals=4), 5),
+                             round(np.around(recall_score(y_valid, support_predict_normalize_scale),
+                                             decimals=4), 5),
+                             round(np.around(recall_score(y_valid, support_predict_scale_normalize),
+                                             decimals=4), 5)]
 
-    window.support_f1 = [round(np.around(f1_score(y_valid, support_predict),
-                                  decimals=4), 5), round(np.around(f1_score(y_valid, support_predict_normalize),
-                                                                   decimals=4), 5),
-                  round(np.around(f1_score(y_valid, support_predict_scale),
-                                  decimals=4), 5), round(np.around(f1_score(y_valid, support_predict_normalize_scale),
-                                                                   decimals=4), 5),
-                  round(np.around(f1_score(y_valid, support_predict_scale_normalize),
-                                  decimals=4), 5)]
+    window.support_f1 = [round(np.around(fbeta_score(y_valid, support_predict, 0.5),
+                                         decimals=4), 5), round(np.around(fbeta_score(y_valid, support_predict_normalize, 0.5),
+                                                                          decimals=4), 5),
+                         round(np.around(fbeta_score(y_valid, support_predict_scale, 0.5),
+                                         decimals=4), 5),
+                         round(np.around(fbeta_score(y_valid, support_predict_normalize_scale, 0.5),
+                                         decimals=4), 5),
+                         round(np.around(fbeta_score(y_valid, support_predict_scale_normalize, 0.5),
+                                         decimals=4), 5)]
 
     window.support_roc_auc = [round(np.around(roc_auc_score(y_valid, support_predict),
-                                       decimals=4), 5),
-                       round(np.around(roc_auc_score(y_valid, support_predict_normalize),
-                                       decimals=4), 5),
-                       round(np.around(roc_auc_score(y_valid, support_predict_scale),
-                                       decimals=4), 5),
-                       round(np.around(roc_auc_score(y_valid, support_predict_normalize_scale),
-                                       decimals=4), 5),
-                       round(np.around(roc_auc_score(y_valid, support_predict_scale_normalize),
-                                       decimals=4), 5)]
+                                              decimals=4), 5),
+                              round(np.around(roc_auc_score(y_valid, support_predict_normalize),
+                                              decimals=4), 5),
+                              round(np.around(roc_auc_score(y_valid, support_predict_scale),
+                                              decimals=4), 5),
+                              round(np.around(roc_auc_score(y_valid, support_predict_normalize_scale),
+                                              decimals=4), 5),
+                              round(np.around(roc_auc_score(y_valid, support_predict_scale_normalize),
+                                              decimals=4), 5)]
 
     window.support_max_values_indexes = [window.support_accuracy.index(max(window.support_accuracy)),
-                                  window.support_precision.index(max(window.support_precision)),
-                                  window.support_recall.index(max(window.support_recall)),
-                                  window.support_f1.index(max(window.support_f1)),
-                                  window.support_roc_auc.index(max(window.support_roc_auc))]
+                                         window.support_precision.index(max(window.support_precision)),
+                                         window.support_recall.index(max(window.support_recall)),
+                                         window.support_f1.index(max(window.support_f1)),
+                                         window.support_roc_auc.index(max(window.support_roc_auc))]
 
     window.support_accuracy = window.support_accuracy[
         max(set(window.support_max_values_indexes),
@@ -531,10 +534,10 @@ def svm_vectors(window, x_train, x_valid, y_train, y_valid, x_train_normalize, x
             key=window.support_max_values_indexes.count)]
 
     support_predicts = [support_predict, support_predict_normalize, support_predict_scale,
-                    support_predict_normalize_scale,
-                    support_predict_scale_normalize]
+                        support_predict_normalize_scale,
+                        support_predict_scale_normalize]
     predict = support_predicts[max(set(window.support_max_values_indexes),
-                               key=window.support_max_values_indexes.count)]
+                                   key=window.support_max_values_indexes.count)]
     cf_matrix = confusion_matrix(y_valid, predict)
     TN, FP, FN, TP = cf_matrix.ravel()
     group_names = ["TN", "FP", "FN", "TP"]
@@ -543,7 +546,7 @@ def svm_vectors(window, x_train, x_valid, y_train, y_valid, x_train_normalize, x
     labels = np.asarray(labels).reshape(2, 2)
     sns.heatmap(cf_matrix, annot=labels, fmt="", cmap="Blues", cbar=True, xticklabels=False,
                 yticklabels=False)
-    #plt.show()
+    # plt.show()
     len_cf_matrix = TN + FP + FN + TP
     if window.support_roc_auc >= 0.7:
         window.support_roc_auc_significant = False
@@ -553,6 +556,7 @@ def svm_vectors(window, x_train, x_valid, y_train, y_valid, x_train_normalize, x
         window.support_roc_auc_significant = True
         window.support_f1_significant = False
         window.support_significant = window.support_roc_auc
+
 
 def tree(window, x_train, x_valid, y_train, y_valid, x_train_normalize, x_train_scale,
          x_train_normalize_scale, x_train_scale_normalize, x_valid_normalize, x_valid_scale,
@@ -569,63 +573,63 @@ def tree(window, x_train, x_valid, y_train, y_valid, x_train_normalize, x_train_
     tree.fit(x_train_scale_normalize, y_train)
     tree_predict_scale_normalize = tree.predict(x_valid_scale_normalize)
     window.tree_accuracy = [round(np.around(accuracy_score(y_valid, tree_predict),
-                                     decimals=4), 5),
-                     round(np.around(accuracy_score(y_valid, tree_predict_normalize),
-                                     decimals=4), 5),
-                     round(np.around(accuracy_score(y_valid, tree_predict_scale),
-                                     decimals=4), 5),
-                     round(np.around(accuracy_score(y_valid, tree_predict_normalize_scale),
-                                     decimals=4), 5),
-                     round(np.around(accuracy_score(y_valid, tree_predict_scale_normalize),
-                                     decimals=4), 5)]
+                                            decimals=4), 5),
+                            round(np.around(accuracy_score(y_valid, tree_predict_normalize),
+                                            decimals=4), 5),
+                            round(np.around(accuracy_score(y_valid, tree_predict_scale),
+                                            decimals=4), 5),
+                            round(np.around(accuracy_score(y_valid, tree_predict_normalize_scale),
+                                            decimals=4), 5),
+                            round(np.around(accuracy_score(y_valid, tree_predict_scale_normalize),
+                                            decimals=4), 5)]
 
     window.tree_precision = [round(np.around(precision_score(y_valid, tree_predict),
-                                      decimals=4), 5),
-                      round(np.around(precision_score(y_valid, tree_predict_normalize),
-                                      decimals=4), 5),
-                      round(np.around(precision_score(y_valid, tree_predict_scale),
-                                      decimals=4), 5),
-                      round(np.around(precision_score(y_valid, tree_predict_normalize_scale),
-                                      decimals=4), 5),
-                      round(np.around(precision_score(y_valid, tree_predict_scale_normalize),
-                                      decimals=4), 5)]
+                                             decimals=4), 5),
+                             round(np.around(precision_score(y_valid, tree_predict_normalize),
+                                             decimals=4), 5),
+                             round(np.around(precision_score(y_valid, tree_predict_scale),
+                                             decimals=4), 5),
+                             round(np.around(precision_score(y_valid, tree_predict_normalize_scale),
+                                             decimals=4), 5),
+                             round(np.around(precision_score(y_valid, tree_predict_scale_normalize),
+                                             decimals=4), 5)]
 
     window.tree_recall = [round(np.around(recall_score(y_valid, tree_predict),
-                                   decimals=4), 5),
-                   round(np.around(recall_score(y_valid, tree_predict_normalize),
-                                   decimals=4), 5),
-                   round(np.around(recall_score(y_valid, tree_predict_scale),
-                                   decimals=4), 5),
-                   round(np.around(recall_score(y_valid, tree_predict_normalize_scale),
-                                   decimals=4), 5),
-                   round(np.around(recall_score(y_valid, tree_predict_scale_normalize),
-                                   decimals=4), 5)]
+                                          decimals=4), 5),
+                          round(np.around(recall_score(y_valid, tree_predict_normalize),
+                                          decimals=4), 5),
+                          round(np.around(recall_score(y_valid, tree_predict_scale),
+                                          decimals=4), 5),
+                          round(np.around(recall_score(y_valid, tree_predict_normalize_scale),
+                                          decimals=4), 5),
+                          round(np.around(recall_score(y_valid, tree_predict_scale_normalize),
+                                          decimals=4), 5)]
 
-    window.tree_f1 = [round(np.around(f1_score(y_valid, tree_predict),
-                               decimals=4), 5), round(np.around(f1_score(y_valid, tree_predict_normalize),
-                                                                decimals=4), 5),
-               round(np.around(f1_score(y_valid, tree_predict_scale),
-                               decimals=4), 5), round(np.around(f1_score(y_valid, tree_predict_normalize_scale),
-                                                                decimals=4), 5),
-               round(np.around(f1_score(y_valid, tree_predict_scale_normalize),
-                               decimals=4), 5)]
+    window.tree_f1 = [round(np.around(fbeta_score(y_valid, tree_predict, 0.5),
+                                      decimals=4), 5), round(np.around(fbeta_score(y_valid, tree_predict_normalize, 0.5),
+                                                                       decimals=4), 5),
+                      round(np.around(fbeta_score(y_valid, tree_predict_scale, 0.5),
+                                      decimals=4), 5), round(np.around(fbeta_score(y_valid, tree_predict_normalize_scale, 0.5),
+                                                                       decimals=4), 5),
+                      round(np.around(fbeta_score(y_valid, tree_predict_scale_normalize, 0.5),
+                                      decimals=4), 5)]
 
     window.tree_roc_auc = [round(np.around(roc_auc_score(y_valid, tree_predict),
-                                    decimals=4), 5),
-                    round(np.around(roc_auc_score(y_valid, tree_predict_normalize),
-                                    decimals=4), 5),
-                    round(np.around(roc_auc_score(y_valid, tree_predict_scale),
-                                    decimals=4), 5),
-                    round(np.around(roc_auc_score(y_valid, tree_predict_normalize_scale),
-                                    decimals=4), 5),
-                    round(np.around(roc_auc_score(y_valid, tree_predict_scale_normalize),
-                                    decimals=4), 5)]
+                                           decimals=4), 5),
+                           round(np.around(roc_auc_score(y_valid, tree_predict_normalize),
+                                           decimals=4), 5),
+                           round(np.around(roc_auc_score(y_valid, tree_predict_scale),
+                                           decimals=4), 5),
+                           round(np.around(roc_auc_score(y_valid, tree_predict_normalize_scale),
+                                           decimals=4), 5),
+                           round(np.around(roc_auc_score(y_valid, tree_predict_scale_normalize),
+                                           decimals=4), 5)]
 
     window.tree_max_values_indexes = [window.tree_accuracy.index(max(window.tree_accuracy)),
-                               window.tree_precision.index(max(window.tree_precision)),
-                               window.tree_recall.index(max(window.tree_recall)),
-                               window.tree_f1.index(max(window.tree_f1)),
-                               window.tree_roc_auc.index(max(window.tree_roc_auc))]
+                                      window.tree_precision.index(max(window.tree_precision)),
+                                      window.tree_recall.index(max(window.tree_recall)),
+                                      window.tree_f1.index(max(window.tree_f1)),
+                                      window.tree_roc_auc.index(max(window.tree_roc_auc))]
 
     window.tree_accuracy = window.tree_accuracy[
         max(set(window.tree_max_values_indexes),
@@ -648,10 +652,10 @@ def tree(window, x_train, x_valid, y_train, y_valid, x_train_normalize, x_train_
             key=window.tree_max_values_indexes.count)]
 
     tree_predicts = [tree_predict, tree_predict_normalize, tree_predict_scale,
-                    tree_predict_normalize_scale,
-                    tree_predict_scale_normalize]
+                     tree_predict_normalize_scale,
+                     tree_predict_scale_normalize]
     predict = tree_predicts[max(set(window.tree_max_values_indexes),
-                               key=window.tree_max_values_indexes.count)]
+                                key=window.tree_max_values_indexes.count)]
     cf_matrix = confusion_matrix(y_valid, predict)
     TN, FP, FN, TP = cf_matrix.ravel()
     group_names = ["TN", "FP", "FN", "TP"]
@@ -660,7 +664,7 @@ def tree(window, x_train, x_valid, y_train, y_valid, x_train_normalize, x_train_
     labels = np.asarray(labels).reshape(2, 2)
     sns.heatmap(cf_matrix, annot=labels, fmt="", cmap="Blues", cbar=True, xticklabels=False,
                 yticklabels=False)
-    #plt.show()
+    # plt.show()
     len_cf_matrix = TN + FP + FN + TP
     if window.tree_roc_auc >= 0.7:
         window.tree_roc_auc_significant = False
@@ -670,6 +674,7 @@ def tree(window, x_train, x_valid, y_train, y_valid, x_train_normalize, x_train_
         window.tree_roc_auc_significant = True
         window.tree_f1_significant = False
         window.tree_significant = window.tree_roc_auc
+
 
 def neural_network(window, x_train, x_valid, y_train, y_valid, x_train_normalize, x_train_scale,
                    x_train_normalize_scale, x_train_scale_normalize, x_valid_normalize, x_valid_scale,
@@ -686,69 +691,69 @@ def neural_network(window, x_train, x_valid, y_train, y_valid, x_train_normalize
     neural.fit(x_train_scale_normalize, y_train)
     neural_predict_scale_normalize = neural.predict(x_valid_scale_normalize)
     window.neural_accuracy = [round(np.around(accuracy_score(y_valid, neural_predict),
-                                       decimals=4), 5),
-                       round(np.around(accuracy_score(y_valid, neural_predict_normalize),
-                                       decimals=4), 5),
-                       round(np.around(accuracy_score(y_valid, neural_predict_scale),
-                                       decimals=4), 5),
-                       round(np.around(accuracy_score(y_valid, neural_predict_normalize_scale),
-                                       decimals=4), 5),
-                       round(np.around(accuracy_score(y_valid, neural_predict_scale_normalize),
-                                       decimals=4), 5)]
+                                              decimals=4), 5),
+                              round(np.around(accuracy_score(y_valid, neural_predict_normalize),
+                                              decimals=4), 5),
+                              round(np.around(accuracy_score(y_valid, neural_predict_scale),
+                                              decimals=4), 5),
+                              round(np.around(accuracy_score(y_valid, neural_predict_normalize_scale),
+                                              decimals=4), 5),
+                              round(np.around(accuracy_score(y_valid, neural_predict_scale_normalize),
+                                              decimals=4), 5)]
 
     window.neural_precision = [round(np.around(precision_score(y_valid, neural_predict),
-                                        decimals=4), 5),
-                        round(np.around(precision_score(y_valid, neural_predict_normalize),
-                                        decimals=4), 5),
-                        round(np.around(precision_score(y_valid, neural_predict_scale),
-                                        decimals=4), 5),
-                        round(np.around(precision_score(y_valid, neural_predict_normalize_scale),
-                                        decimals=4), 5),
-                        round(np.around(precision_score(y_valid, neural_predict_scale_normalize),
-                                        decimals=4), 5)]
+                                               decimals=4), 5),
+                               round(np.around(precision_score(y_valid, neural_predict_normalize),
+                                               decimals=4), 5),
+                               round(np.around(precision_score(y_valid, neural_predict_scale),
+                                               decimals=4), 5),
+                               round(np.around(precision_score(y_valid, neural_predict_normalize_scale),
+                                               decimals=4), 5),
+                               round(np.around(precision_score(y_valid, neural_predict_scale_normalize),
+                                               decimals=4), 5)]
 
     window.neural_recall = [round(np.around(recall_score(y_valid, neural_predict),
-                                     decimals=4), 5),
-                     round(np.around(recall_score(y_valid, neural_predict_normalize),
-                                     decimals=4), 5),
-                     round(np.around(recall_score(y_valid, neural_predict_scale),
-                                     decimals=4), 5),
-                     round(np.around(recall_score(y_valid, neural_predict_normalize_scale),
-                                     decimals=4), 5),
-                     round(np.around(recall_score(y_valid, neural_predict_scale_normalize),
-                                     decimals=4), 5)]
+                                            decimals=4), 5),
+                            round(np.around(recall_score(y_valid, neural_predict_normalize),
+                                            decimals=4), 5),
+                            round(np.around(recall_score(y_valid, neural_predict_scale),
+                                            decimals=4), 5),
+                            round(np.around(recall_score(y_valid, neural_predict_normalize_scale),
+                                            decimals=4), 5),
+                            round(np.around(recall_score(y_valid, neural_predict_scale_normalize),
+                                            decimals=4), 5)]
 
-    window.neural_f1 = [round(np.around(f1_score(y_valid, neural_predict),
-                                 decimals=4), 5), round(np.around(f1_score(y_valid, neural_predict_normalize),
-                                                                  decimals=4), 5),
-                 round(np.around(f1_score(y_valid, neural_predict_scale),
-                                 decimals=4), 5), round(np.around(f1_score(y_valid, neural_predict_normalize_scale),
-                                                                  decimals=4), 5),
-                 round(np.around(f1_score(y_valid, neural_predict_scale_normalize),
-                                 decimals=4), 5)]
+    window.neural_f1 = [round(np.around(fbeta_score(y_valid, neural_predict, 0.5),
+                                        decimals=4), 5), round(np.around(fbeta_score(y_valid, neural_predict_normalize, 0.5),
+                                                                         decimals=4), 5),
+                        round(np.around(fbeta_score(y_valid, neural_predict_scale, 0.5),
+                                        decimals=4), 5),
+                        round(np.around(fbeta_score(y_valid, neural_predict_normalize_scale, 0.5),
+                                        decimals=4), 5),
+                        round(np.around(fbeta_score(y_valid, neural_predict_scale_normalize, 0.5),
+                                        decimals=4), 5)]
 
     window.neural_roc_auc = [round(np.around(roc_auc_score(y_valid, neural_predict),
-                                      decimals=4), 5),
-                      round(np.around(roc_auc_score(y_valid, neural_predict_normalize),
-                                      decimals=4), 5),
-                      round(np.around(roc_auc_score(y_valid, neural_predict_scale),
-                                      decimals=4), 5),
-                      round(np.around(roc_auc_score(y_valid, neural_predict_normalize_scale),
-                                      decimals=4), 5),
-                      round(np.around(roc_auc_score(y_valid, neural_predict_scale_normalize),
-                                      decimals=4), 5)]
+                                             decimals=4), 5),
+                             round(np.around(roc_auc_score(y_valid, neural_predict_normalize),
+                                             decimals=4), 5),
+                             round(np.around(roc_auc_score(y_valid, neural_predict_scale),
+                                             decimals=4), 5),
+                             round(np.around(roc_auc_score(y_valid, neural_predict_normalize_scale),
+                                             decimals=4), 5),
+                             round(np.around(roc_auc_score(y_valid, neural_predict_scale_normalize),
+                                             decimals=4), 5)]
 
     window.neural_max_values_indexes = [window.neural_accuracy.index(max(window.neural_accuracy)),
-                                 window.neural_precision.index(max(window.neural_precision)),
-                                 window.neural_recall.index(max(window.neural_recall)),
-                                 window.neural_f1.index(max(window.neural_f1)),
-                                 window.neural_roc_auc.index(max(window.neural_roc_auc))]
+                                        window.neural_precision.index(max(window.neural_precision)),
+                                        window.neural_recall.index(max(window.neural_recall)),
+                                        window.neural_f1.index(max(window.neural_f1)),
+                                        window.neural_roc_auc.index(max(window.neural_roc_auc))]
 
-
-
-    neural_predicts = [neural_predict, neural_predict_normalize, neural_predict_scale, neural_predict_normalize_scale, neural_predict_scale_normalize]
+    neural_predicts = [neural_predict, neural_predict_normalize, neural_predict_scale, neural_predict_normalize_scale,
+                       neural_predict_scale_normalize]
     predict = neural_predicts[max(set(window.neural_max_values_indexes),
-            key=window.neural_max_values_indexes.count)]
+                                  key=window.neural_max_values_indexes.count)]
     cf_matrix = confusion_matrix(y_valid, predict)
     TN, FP, FN, TP = cf_matrix.ravel()
     group_names = ["TN", "FP", "FN", "TP"]
@@ -757,11 +762,8 @@ def neural_network(window, x_train, x_valid, y_train, y_valid, x_train_normalize
     labels = np.asarray(labels).reshape(2, 2)
     sns.heatmap(cf_matrix, annot=labels, fmt="", cmap="Blues", cbar=True, xticklabels=False,
                 yticklabels=False)
-    #plt.show()
+    # plt.show()
     len_cf_matrix = TN + FP + FN + TP
-
-
-
 
     window.neural_accuracy = window.neural_accuracy[
         max(set(window.neural_max_values_indexes),
