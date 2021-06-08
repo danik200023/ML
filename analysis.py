@@ -7,10 +7,12 @@ from sklearn.linear_model import SGDClassifier
 from sklearn.neural_network import MLPClassifier
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
-from sklearn.ensemble import BaggingClassifier
+from sklearn.ensemble import BaggingClassifier, StackingClassifier, AdaBoostClassifier
 from sklearn.metrics import confusion_matrix
 import seaborn as sns
-import matplotlib.pyplot as plt
+
+
+
 
 
 def significant(window):
@@ -32,7 +34,15 @@ def significant(window):
 def logistic_regression(window, x_train, x_valid, y_train, y_valid, x_train_normalize, x_train_scale,
                         x_train_normalize_scale, x_train_scale_normalize, x_valid_normalize, x_valid_scale,
                         x_valid_normalize_scale, x_valid_scale_normalize):
-    logistic = SGDClassifier(loss='log')
+    if window.radioButton.isChecked():
+        logistic = BaggingClassifier(SGDClassifier(loss='log'))
+    elif window.radioButton_2.isChecked():
+        logistic = StackingClassifier([('log', SGDClassifier(loss='log')), ('clf', MultinomialNB()), ('disc', LinearDiscriminantAnalysis()), ('sup', SVC(kernel="linear", C=0.025)), ('tree', DecisionTreeClassifier()), ('neur', MLPClassifier())], SGDClassifier(loss='log'))
+    elif window.radioButton_3.isChecked():
+        logistic = AdaBoostClassifier(SGDClassifier(loss='log'))
+    else:
+        logistic = SGDClassifier(loss='log')
+
     logistic.fit(x_train, y_train)
     logistic_predict = logistic.predict(x_valid)
     logistic.fit(x_train_normalize, y_train)
@@ -151,7 +161,14 @@ def logistic_regression(window, x_train, x_valid, y_train, y_valid, x_train_norm
 def bayes(window, x_train, x_valid, y_train, y_valid, x_train_normalize, x_train_scale,
           x_train_normalize_scale, x_train_scale_normalize, x_valid_normalize, x_valid_scale,
           x_valid_normalize_scale, x_valid_scale_normalize):
-    clf = MultinomialNB()
+    if window.radioButton.isChecked():
+        clf = BaggingClassifier(MultinomialNB())
+    elif window.radioButton_2.isChecked():
+        clf = StackingClassifier([('log', SGDClassifier(loss='log')), ('clf', MultinomialNB()), ('disc', LinearDiscriminantAnalysis()), ('sup', SVC(kernel="linear", C=0.025)), ('tree', DecisionTreeClassifier()), ('neur', MLPClassifier())], MultinomialNB())
+    elif window.radioButton_3.isChecked():
+        clf = AdaBoostClassifier(MultinomialNB())
+    else:
+        clf = MultinomialNB()
     try:
         clf.fit(x_train, y_train)
         clf_predict = clf.predict(x_valid)
@@ -323,7 +340,15 @@ def bayes(window, x_train, x_valid, y_train, y_valid, x_train_normalize, x_train
 def discriminant_analysis(window, x_train, x_valid, y_train, y_valid, x_train_normalize, x_train_scale,
                           x_train_normalize_scale, x_train_scale_normalize, x_valid_normalize, x_valid_scale,
                           x_valid_normalize_scale, x_valid_scale_normalize):
-    disc = LinearDiscriminantAnalysis()
+    
+    if window.radioButton.isChecked():
+        disc = BaggingClassifier(LinearDiscriminantAnalysis())
+    elif window.radioButton_2.isChecked():
+        disc = StackingClassifier([('log', SGDClassifier(loss='log')), ('clf', MultinomialNB()), ('disc', LinearDiscriminantAnalysis()), ('sup', SVC(kernel="linear", C=0.025)), ('tree', DecisionTreeClassifier()), ('neur', MLPClassifier())], LinearDiscriminantAnalysis())
+    elif window.radioButton_3.isChecked():
+        disc = AdaBoostClassifier(LinearDiscriminantAnalysis())
+    else:
+        disc = LinearDiscriminantAnalysis()
     disc.fit(x_train, y_train)
     disc_predict = disc.predict(x_valid)
     disc.fit(x_train_normalize, y_train)
@@ -442,7 +467,14 @@ def discriminant_analysis(window, x_train, x_valid, y_train, y_valid, x_train_no
 def svm_vectors(window, x_train, x_valid, y_train, y_valid, x_train_normalize, x_train_scale,
                 x_train_normalize_scale, x_train_scale_normalize, x_valid_normalize, x_valid_scale,
                 x_valid_normalize_scale, x_valid_scale_normalize):
-    support = SVC(kernel="linear", C=0.025)
+    if window.radioButton.isChecked():
+        support = BaggingClassifier(SVC(kernel='linear', C=0.025))
+    elif window.radioButton_2.isChecked():
+        support = StackingClassifier([('log', SGDClassifier(loss='log')), ('clf', MultinomialNB()), ('disc', LinearDiscriminantAnalysis()), ('sup', SVC(kernel="linear", C=0.025)), ('tree', DecisionTreeClassifier()), ('neur', MLPClassifier())], SVC(kernel='linear', C=0.025))
+    elif window.radioButton_3.isChecked():
+        support = AdaBoostClassifier(SVC(kernel='linear', C=0.025), algorithm='SAMME')
+    else:
+        support = SVC(kernel='linear', C=0.025)
     support.fit(x_train, y_train)
     support_predict = support.predict(x_valid)
     support.fit(x_train_normalize, y_train)
@@ -561,7 +593,14 @@ def svm_vectors(window, x_train, x_valid, y_train, y_valid, x_train_normalize, x
 def tree(window, x_train, x_valid, y_train, y_valid, x_train_normalize, x_train_scale,
          x_train_normalize_scale, x_train_scale_normalize, x_valid_normalize, x_valid_scale,
          x_valid_normalize_scale, x_valid_scale_normalize):
-    tree = DecisionTreeClassifier()
+    if window.radioButton.isChecked():
+        tree = BaggingClassifier(DecisionTreeClassifier())
+    elif window.radioButton_2.isChecked():
+        tree = StackingClassifier([('log', SGDClassifier(loss='log')), ('clf', MultinomialNB()), ('disc', LinearDiscriminantAnalysis()), ('sup', SVC(kernel="linear", C=0.025)), ('tree', DecisionTreeClassifier()), ('neur', MLPClassifier())], DecisionTreeClassifier())
+    elif window.radioButton_3.isChecked():
+        tree = AdaBoostClassifier(DecisionTreeClassifier())
+    else:
+        tree = DecisionTreeClassifier()
     tree.fit(x_train, y_train)
     tree_predict = tree.predict(x_valid)
     tree.fit(x_train_normalize, y_train)
@@ -679,7 +718,15 @@ def tree(window, x_train, x_valid, y_train, y_valid, x_train_normalize, x_train_
 def neural_network(window, x_train, x_valid, y_train, y_valid, x_train_normalize, x_train_scale,
                    x_train_normalize_scale, x_train_scale_normalize, x_valid_normalize, x_valid_scale,
                    x_valid_normalize_scale, x_valid_scale_normalize):
-    neural = MLPClassifier()
+    if window.radioButton.isChecked():
+        neural = BaggingClassifier(MLPClassifier())
+    elif window.radioButton_2.isChecked():
+        neural = StackingClassifier([('log', SGDClassifier(loss='log')), ('clf', MultinomialNB()), ('disc', LinearDiscriminantAnalysis()), ('sup', SVC(kernel="linear", C=0.025)), ('tree', DecisionTreeClassifier()), ('neur', MLPClassifier())], MLPClassifier())
+    elif window.radioButton_3.isChecked():
+        # neural = AdaBoostClassifier(MLPClassifier(), algorithm='SAMME')
+        neural = MLPClassifier()
+    else:
+        neural = MLPClassifier()
     neural.fit(x_train, y_train)
     neural_predict = neural.predict(x_valid)
     neural.fit(x_train_normalize, y_train)

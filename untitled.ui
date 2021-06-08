@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>502</width>
+    <width>575</width>
     <height>689</height>
    </rect>
   </property>
@@ -19,7 +19,7 @@
      <rect>
       <x>200</x>
       <y>20</y>
-      <width>242</width>
+      <width>373</width>
       <height>227</height>
      </rect>
     </property>
@@ -50,9 +50,23 @@
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="checkBox_2">
+        <widget class="QRadioButton" name="radioButton">
          <property name="text">
           <string>Бэггинг</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="radioButton_2">
+         <property name="text">
+          <string>Стекинг</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="radioButton_3">
+         <property name="text">
+          <string>Бустинг</string>
          </property>
         </widget>
        </item>
@@ -149,7 +163,7 @@
      <rect>
       <x>20</x>
       <y>20</y>
-      <width>172</width>
+      <width>181</width>
       <height>151</height>
      </rect>
     </property>
@@ -313,7 +327,7 @@
      <rect>
       <x>10</x>
       <y>400</y>
-      <width>481</width>
+      <width>561</width>
       <height>231</height>
      </rect>
     </property>
@@ -330,7 +344,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>502</width>
+     <width>575</width>
      <height>21</height>
     </rect>
    </property>

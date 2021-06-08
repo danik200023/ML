@@ -13,7 +13,6 @@ def main():
     window.show()  # Показываем окно
     window.pushButton.clicked.connect(lambda: browse.browse_folder(window))
     # window.pushButton_4.clicked.connect(lambda: table.cleaning(window))
-    window.radioButton
     window.checkBox_9.clicked.connect(lambda: tstat.significance(window))
     window.pushButton_4.clicked.connect(lambda: analysis.significant(window))
     window.pushButton_4.clicked.connect(
