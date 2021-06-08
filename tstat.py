@@ -173,8 +173,9 @@ def cleaning(window):
         pass
 
 def significance(window):
+
     if window.checkBox_9.isChecked():
-        window.window2.move(1222, 150)
+        window.window2.move(1271, 144)
         window.window2.show()
         tstat(window)
     else:

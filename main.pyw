@@ -237,6 +237,7 @@ class Window(QtWidgets.QMainWindow, design.Ui_MainWindow):
         column = 0  # столбец
         row = 0  # строка
         try:
+            self.tabl
             self.tableWidget.setItem(row, column, QTableWidgetItem(self.accuracy_score_logistic))
             self.tableWidget.setItem(row, column + 1, QTableWidgetItem(self.precision_score_logistic))
             self.tableWidget.setItem(row, column + 2, QTableWidgetItem(self.recall_score_logistic))

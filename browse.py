@@ -10,14 +10,15 @@ def browse_folder(window):
         window.label_2.show()
         fname = QtWidgets.QFileDialog.getOpenFileName(window, 'Open file', 'data', 'Тип файлов (*csv)')[0]
         name = os.path.basename(fname)
-        percent = float(window.lineEdit.text()) / 100
+        window.percent = float(window.lineEdit.text()) / 100
         index = name.index('.')
         window.label_2.setText("Выбранный файл:\n " + str(name[:index]))
         window.data = pd.read_csv(fname)
+        window.old_data = window.data
         window.y = window.data[window.data.columns[-1]].astype('int')
         window.x = window.data.drop(window.data.columns[-1], axis=1)
         window.x_train, window.x_valid, window.y_train, window.y_valid = train_test_split(window.x, window.y,
-                                                                                          test_size=percent)
+                                                                                          test_size=window.percent)
         window.x_train_normalize = preprocessing.normalize(window.x_train)
         window.x_train_scale = preprocessing.scale(window.x_train)
         window.x_train_normalize_scale = preprocessing.scale(window.x_train_normalize)
