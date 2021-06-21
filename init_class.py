@@ -31,7 +31,7 @@ class Window(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.label_2.hide()
         self.label_5.hide()
         self.tableWidget.hide()
-        self.pushButton_2.hide()
+        #self.pushButton_2.hide()
         self.lineEdit_2.hide()
 
 

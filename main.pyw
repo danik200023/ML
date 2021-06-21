@@ -353,6 +353,7 @@ class Window(QtWidgets.QMainWindow, design.Ui_MainWindow):
             self.Ycsv.to_excel('prediction.xls')
             self.cleaning()
 
+
     def browse_new_data(self):
         try:
             self.label_7.setText("")
