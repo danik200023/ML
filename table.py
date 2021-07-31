@@ -247,6 +247,15 @@ def table(window):
     except:
         pass
     row += 1
+    try:
+        window.tableWidget.setItem(row, column, QTableWidgetItem(window.accuracy_score_agregation_voting))
+        window.tableWidget.setItem(row, column + 1, QTableWidgetItem(window.precision_score_agregation_voting))
+        window.tableWidget.setItem(row, column + 2, QTableWidgetItem(window.recall_score_agregation_voting))
+        window.tableWidget.setItem(row, column + 3, QTableWidgetItem(window.f1_score_agregation_voting))
+        window.tableWidget.setItem(row, column + 4, QTableWidgetItem(window.auc_score_agregation_voting))
+
+    except:
+        pass
 
 def cleaning(window):
     try:

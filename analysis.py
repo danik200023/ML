@@ -1,7 +1,7 @@
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split, GridSearchCV
-from sklearn.metrics import accuracy_score, precision_score, recall_score, fbeta_score, roc_auc_score, fbeta_score
+from sklearn.metrics import accuracy_score, precision_score, recall_score, fbeta_score, roc_auc_score, fbeta_score, f1_score
 from sklearn.svm import SVC
 from sklearn.linear_model import SGDClassifier
 from sklearn.neural_network import MLPClassifier
@@ -12,7 +12,129 @@ from sklearn.metrics import confusion_matrix
 import seaborn as sns
 
 
+def agregation(window):
+    # window.cleaning()
+    count = 0
+    if window.checkBox_7.isChecked():
+        count += 1
 
+    if window.checkBox_8.isChecked():
+        count += 1
+
+    if window.checkBox_5.isChecked():
+        count += 1
+
+    if window.checkBox_6.isChecked():
+        count += 1
+
+    if window.checkBox_3.isChecked():
+        count += 1
+
+    if window.checkBox_4.isChecked():
+        count += 1
+    x = []
+    y = []
+    pred = []
+    for i in range(count):
+        x.append(window.x_train[
+                 i * (len(window.x_train) // count):len(window.x_train) * (i + 1) // count])
+        y.append(window.y_train[i * (len(window.y_train) // count):len(window.y_train) * (i + 1) // count])
+        if window.label_2.text() != "Вы не открыли файл" and window.label_2.text() != " ":
+            if window.lineEdit.text().isdigit():
+                if 1 <= int(window.lineEdit.text()) <= 100:
+                    # window.tableWidget.show()
+                    # window.label_5.show()
+                    # window.label_4.hide()
+                    # window.pushButton_2.show()
+                    if window.checkBox_7.isChecked():
+                        # window.bayes(x[i], y[i], window.x_valid, window.y_valid)
+                        pred.append(window.predprob_bayes)
+                        window.checkBox_7.setChecked(False)
+                        continue
+                    if window.checkBox_8.isChecked():
+                        # window.logistic_regression(x[i], y[i], window.x_valid, window.y_valid)
+                        pred.append(window.predprob_logistic)
+                        window.checkBox_8.setChecked(False)
+                        continue
+                    if window.checkBox_5.isChecked():
+                        # window.svm_vectors(x[i], y[i], window.x_valid, window.y_valid)
+                        pred.append(window.predprob_svm)
+                        window.checkBox_5.setChecked(False)
+                        continue
+                    if window.checkBox_6.isChecked():
+                        # window.discriminant_analysis(x[i], y[i], window.x_valid, window.y_valid)
+                        pred.append(window.predprob_discriminant)
+                        window.checkBox_6.setChecked(False)
+                        continue
+                    if window.checkBox_3.isChecked():
+                        # window.tree(x[i], y[i], window.x_valid, window.y_valid)
+                        pred.append(window.predprob_tree)
+                        window.checkBox_3.setChecked(False)
+                        continue
+                    if window.checkBox_4.isChecked():
+                        # window.neural_network(x[i], y[i], window.x_valid, window.y_valid)
+                        pred.append(window.predprob_network)
+                        window.checkBox_4.setChecked(False)
+                        continue
+
+    predd = []
+    mean = []
+    median = []
+    voting = []
+    for i in range(pred[0].shape[0]):
+        preddd = []
+        for j in range(count):
+            preddd.append(pred[j][i][1])
+            # print(pred[j][i][1])
+        predd.append(preddd)
+        mean.append(np.mean(predd[i]))
+        median.append(np.median(predd[i]))
+
+    predd = []
+    for i in range(pred[0].shape[0]):
+        preddd = []
+        for j in range(count):
+            if pred[j][i][1] >= 0.1:
+                preddd.append(pred[j][i][1])
+        predd.append(preddd)
+        voting.append(np.mean(predd[i]))
+    meann = [round(num) for num in mean]
+    window.accuracy_score_agregation_mean = str(
+        round(np.around(accuracy_score(window.y_valid, meann),
+                        decimals=4) * 100, 5)) + "%"
+    window.precision_score_agregation_mean = str(round(
+        np.around(precision_score(window.y_valid, meann, zero_division=0),
+                  decimals=4), 5))
+    window.recall_score_agregation_mean = str(round(
+        np.around(recall_score(window.y_valid, meann, zero_division=0), decimals=4), 5))
+    window.f1_score_agregation_mean = str(round(
+        np.around(f1_score(window.y_valid, meann, zero_division=0), decimals=4), 5))
+    window.auc_score_agregation_mean = str(round(roc_auc_score(window.y_valid, meann), 5))
+    mediann = [round(num) for num in median]
+    window.accuracy_score_agregation_median = str(
+        round(np.around(accuracy_score(window.y_valid, mediann),
+                        decimals=4) * 100, 5)) + "%"
+    window.precision_score_agregation_median = str(round(
+        np.around(precision_score(window.y_valid, mediann, zero_division=0),
+                  decimals=4), 5))
+    window.recall_score_agregation_median = str(round(
+        np.around(recall_score(window.y_valid, mediann, zero_division=0), decimals=4), 5))
+    window.f1_score_agregation_median = str(round(
+        np.around(f1_score(window.y_valid, mediann, zero_division=0), decimals=4), 5))
+    votingg = [round(num) for num in voting]
+    window.auc_score_agregation_voting = str(round(roc_auc_score(window.y_valid, votingg), 5))
+    window.accuracy_score_agregation_voting = str(
+        round(np.around(accuracy_score(window.y_valid, votingg),
+                        decimals=4) * 100, 5)) + "%"
+    window.precision_score_agregation_voting = str(round(
+        np.around(precision_score(window.y_valid, votingg, zero_division=0),
+                  decimals=4), 5))
+    window.recall_score_agregation_voting = str(
+        round(np.around(recall_score(window.y_valid, votingg, zero_division=0), decimals=4), 5))
+    window.f1_score_agregation_voting = str(round(
+        np.around(f1_score(window.y_valid, votingg, zero_division=0), decimals=4), 5))
+    window.auc_score_agregation_voting = str(round(roc_auc_score(window.y_valid, votingg), 5))
+    window.table()
 
 
 def significant(window):
@@ -138,6 +260,8 @@ def logistic_regression(window, x_train, x_valid, y_train, y_valid, x_train_norm
                          logistic_predict_normalize_scale,
                          logistic_predict_scale_normalize]
     predict = logistic_predicts[max(set(window.logistic_max_values_indexes),
+                                    key=window.logistic_max_values_indexes.count)]
+    window.predprob_logistic = logistic.predict_proba[max(set(window.logistic_max_values_indexes),
                                     key=window.logistic_max_values_indexes.count)]
     cf_matrix = confusion_matrix(y_valid, predict)
     TN, FP, FN, TP = cf_matrix.ravel()
@@ -293,6 +417,8 @@ def bayes(window, x_train, x_valid, y_train, y_valid, x_train_normalize, x_train
                             clf_predict_normalize_scale,
                             clf_predict_scale_normalize]
             predict = clf_predicts[max(set(window.clf_max_values_indexes),
+                                       key=window.clf_max_values_indexes.count)]
+            window.predprob_bayes = clf.predict_proba[max(set(window.clf_max_values_indexes),
                                        key=window.clf_max_values_indexes.count)]
             cf_matrix = confusion_matrix(y_valid, predict)
             TN, FP, FN, TP = cf_matrix.ravel()
@@ -474,7 +600,8 @@ def svm_vectors(window, x_train, x_valid, y_train, y_valid, x_train_normalize, x
     elif window.radioButton_3.isChecked():
         support = AdaBoostClassifier(SVC(kernel='linear', C=0.025), algorithm='SAMME')
     else:
-        support = SVC(kernel='linear', C=0.025)
+        support = GridSearchCV(SVC(kernel='linear', C=0.025), {'max_iter': range(-1, 1000)}, scoring='roc_auc')
+        # support = SVC(kernel='linear', C=0.025)
     support.fit(x_train, y_train)
     support_predict = support.predict(x_valid)
     support.fit(x_train_normalize, y_train)
@@ -726,7 +853,8 @@ def neural_network(window, x_train, x_valid, y_train, y_valid, x_train_normalize
         # neural = AdaBoostClassifier(MLPClassifier(), algorithm='SAMME')
         neural = MLPClassifier()
     else:
-        neural = MLPClassifier()
+        neural = GridSearchCV(MLPClassifier(), {'max_iter': range(175, 225)}, scoring='roc_auc')
+        # neural = MLPClassifier()
     neural.fit(x_train, y_train)
     neural_predict = neural.predict(x_valid)
     neural.fit(x_train_normalize, y_train)

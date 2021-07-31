@@ -56,6 +56,9 @@ def main():
     #    lambda: table.cleaning(window)
     # )
     window.pushButton_4.clicked.connect(
+        lambda: analysis.agregation(window)
+    )
+    window.pushButton_4.clicked.connect(
         lambda: table.table(window)
     )
 
